@@ -1,159 +1,230 @@
 
 namespace lasd {
 
-// Constructors and Destructors
-
-template <typename Data>
-inline Vector<Data>::Vector(const TraversableContainer<Data> &container)
-    : Vector(container.Size()) {
-  unsigned long i{0};
-  container.Traverse(
-      [this, &i](const Data &currData) { elements[i++] = currData; });
-}
-
-template <typename Data>
-inline Vector<Data>::Vector(MappableContainer<Data> &&container)
-    : Vector(container.Size()) {
-  unsigned long i{0};
-  container.Map(
-      [this, &i](Data &currData) { std::swap(elements[i++], currData); });
-}
-
-template <typename Data>
-inline Vector<Data>::Vector(const Vector<Data> &vec) : Vector(vec.size) {
-  std::uninitialized_copy(vec.elements, vec.elements + size, elements);
-}
-
-template <typename Data>
-inline Vector<Data>::Vector(Vector<Data> &&vec) noexcept {
-  std::swap(size, vec.size);
-  std::swap(elements, vec.elements);
-}
-
-// Operators
-
-template <typename Data>
-inline Vector<Data> &Vector<Data>::operator=(const Vector<Data> &vec) {
-  Vector<Data> temp{vec};
-  std::swap(temp, *this);
-  return *this;
-}
-
-template <typename Data>
-inline Vector<Data> &Vector<Data>::operator=(Vector<Data> &&vec) noexcept {
-  std::swap(size, vec.size);
-  std::swap(elements, vec.elements);
-  return *this;
-}
-
-template <typename Data>
-bool Vector<Data>::operator==(const Vector<Data> &vec) const noexcept {
-  if (size != vec.size) {
-    return false;
+  /* ************************************************************************** */
+  
+  template<typename Data>
+  Vector<Data>::Vector(const unsigned long newsize){
+      size = newsize;
+      elements = new Data[size]{};
   }
-
-  for (unsigned long i = 0; i < size; i++) {
-    if (elements[i] != vec[i]) {
+  
+  
+  //Traversable
+  template<typename Data>
+  Vector<Data>::Vector(const TraversableContainer<Data> &Tcon ): Vector(Tcon.Size()) {
+    unsigned long i{0};
+    Tcon.Traverse(
+        [this, &i](const Data &currData) { elements[i++] = currData; });
+  }
+  
+  
+  //Mappable
+  template <typename Data>
+  inline Vector<Data>::Vector(MappableContainer<Data> &&con): Vector(con.Size()) {
+    unsigned long i{0};
+    con.Map(
+        [this, &i](Data &currData) { elements[i++] = std::move(currData); });
+  }
+  
+  //CopyCostructor
+  template <typename Data>
+  inline Vector<Data>::Vector(const Vector<Data> &vec) : Vector(vec.size) {
+    std::uninitialized_copy(vec.elements, vec.elements + size, elements);
+  }
+  
+  //MoveCostructor
+  template <typename Data>
+  inline Vector<Data>::Vector(Vector<Data> &&vec) {
+    std::swap(size, vec.size);
+    std::swap(elements, vec.elements);
+  }
+  
+  //Destructor
+  /* ************************************************************************** */
+  
+  template<typename Data>
+  Vector<Data>::~Vector(){
+      delete[] elements;
+  }
+  
+  
+  //Assignment
+  /* ************************************************************************** */
+  
+  //Copy Assignment
+  template<typename Data>
+  Vector<Data> & Vector<Data>::operator=(const Vector<Data> &vec){
+    Vector<Data> temp{vec};
+    if(temp.size > size){
+      Resize(vec.Size());
+      std::swap(temp, *this);
+      return *this;
+    } 
+    std::swap(temp, *this);
+    return *this;
+  }
+  
+  
+  //Move Assignment
+  template <typename Data>
+  inline Vector<Data> &Vector<Data>::operator=(Vector<Data> &&vec) noexcept {
+    std::swap(size, vec.size);
+    std::swap(elements, vec.elements);
+    return *this;
+  }
+  
+  
+  // Comparison operators
+  /* ************************************************************************** */
+  
+  //Operator ==
+  template <typename Data>
+  bool Vector<Data>::operator==(const Vector<Data> &vector) const noexcept {
+    if (size != vector.size) {
       return false;
     }
+  
+    for (unsigned int i = 0; i < size; i++) {
+      if (elements[i] != vector[i]) {
+        return false;
+      }
+    }
+    return true;
   }
-  return true;
-}
-
-
-template <typename Data>
-inline bool Vector<Data>::operator!=(const Vector<Data> &vec) const noexcept {
-  return !(*this == vec);
-}
-
-//// Specific member functions (inherited from MutableLinearContainer)
-template <typename Data>
-inline Data &Vector<Data>::operator[](unsigned long i) {
-  if (i >= size) {
-    throw std::out_of_range("This Vector has not that many elements");
+  
+  
+  //Operator !=
+  template <typename Data>
+  inline bool Vector<Data>::operator!=(const Vector<Data> &vector) const noexcept {
+    return !(*this == vector);//utilizzo l'operatore appena creato
   }
-  return elements[i];
-}
-
-template <typename Data> inline Data &Vector<Data>::Front() {
-  if (size != 0)
-    return elements[0];
-  throw std::length_error("The Vector is empty");
-}
-
-template <typename Data> inline Data &Vector<Data>::Back() {
-  if (size != 0)
-    return elements[size - 1];
-  throw std::length_error("The Vector is empty");
-}
-
-
-// Specific member functions (inherited from LinearContainer)
-template <typename Data>
-inline const Data &Vector<Data>::operator[](unsigned long i) const {
-  if (i >= size) {
-    throw std::out_of_range("This Vector has not that many elements");
+  
+  
+  // Specific member functions (inherited from MutableLinearContainer)
+  /* ************************************************************************** */
+  
+  //Mutable Operator[]
+  template <typename Data>
+  inline Data &Vector<Data>::operator[](unsigned long i) {
+    if (i > size) {
+      throw std::out_of_range("This Vector has not that many elements");
+    }
+    return elements[i];
   }
-  return elements[i];
-}
-
-template <typename Data> inline const Data &Vector<Data>::Front() const {
-  if (size != 0)
-    return elements[0];
-  throw std::length_error("The Vector is empty");
-}
-
-template <typename Data> inline const Data &Vector<Data>::Back() const {
-  if (size != 0)
-    return elements[size - 1];
-  throw std::length_error("The Vector is empty");
-}
-
-// Specific member function (inherited from ResizableContainer)
-
-template <typename Data> void Vector<Data>::Resize(unsigned long s) {
-  if (s == size) {
-    return;
+  
+  
+  //Mutable Front
+  template <typename Data> inline Data &Vector<Data>::Front() {
+    if (size != 0)
+      return elements[0];
+    throw std::length_error("The Vector is empty");
   }
-
-  if (s == 0) {
-    Clear();
-    return;
+  
+  
+  //Mutable Back
+  template <typename Data> inline Data &Vector<Data>::Back() {
+    if (size != 0)
+      return elements[size - 1];
+    throw std::length_error("The Vector is empty");
   }
-
-  Data *temp{new Data[s]{}};
-
-  unsigned long min{std::min(s, size)};
-
-  for (unsigned long i{0}; i < min; ++i)
-    std::swap(elements[i], temp[i]);
-
-  std::swap(elements, temp);
-  delete[] temp;
-
-  size = s;
-}
-
-// Specific member function (inherited from ClearableContainer)
-template <typename Data> inline void Vector<Data>::Clear() {
-  delete[] elements;
-  size = 0;
-  elements = nullptr;
-}
-
-/* ************************************************************************** */
-template <typename Data>
-inline SortableVector<Data> &
-SortableVector<Data>::operator=(const SortableVector<Data> &vec) {
-  Vector<Data>::operator=(vec);
-  return *this;
-}
-
-template <typename Data>
-inline SortableVector<Data> &
-SortableVector<Data>::operator=(SortableVector<Data> &&vec) noexcept {
-  Vector<Data>::operator=(std::move(vec));
-  return *this;
-}
-
-}
+  
+  
+  
+  
+  // Specific member functions (inherited from LinearContainer)
+  /* ************************************************************************** */
+  
+  
+  //Linear Operator[]
+  template <typename Data>
+  inline const Data &Vector<Data>::operator[](unsigned long i) const {
+    if (i > size) {
+      throw std::out_of_range("This Vector has not that many elements");
+    }
+    return elements[i];
+  }
+  
+  
+  
+  //Linear Front
+  template <typename Data> inline const Data &Vector<Data>::Front() const {
+    if (size != 0)
+      return elements[0];
+    throw std::length_error("The Vector is empty");
+  }
+  
+  
+  //Linear Back
+  template <typename Data> inline const Data &Vector<Data>::Back() const {
+    if (size != 0)
+      return elements[size - 1];
+    throw std::length_error("The Vector is empty");
+  }
+  
+  
+  // Specific member functions inherited
+  /* ************************************************************************** */
+  
+  //Clear
+  template <typename Data>
+  void Vector<Data>::Clear(){
+     delete[] elements;
+     elements = nullptr;
+     size = 0;
+     
+  }
+  
+  //Resize
+  template <typename Data>
+  void Vector<Data>::Resize(const unsigned long newSize) {
+  
+      if(newSize == 0){
+        Clear();
+      }
+      else if(size != newSize){
+          unsigned int limit = (size < newSize) ? size : newSize;
+          Data* tempElems = new Data[newSize] {};
+  
+          for(unsigned long i = 0; i < limit; i++){
+  
+              std::swap(elements[i], tempElems[i]);
+          }
+  
+          std::swap(elements, tempElems);
+          size = newSize;
+          delete[] tempElems;
+  
+      }
+        
+  }
+  
+  
+  
+  //SortableVector
+  /* ************************************************************************** */
+  /* ************************************************************************** */
+  
+  //Copy Assignment
+  template <typename Data>
+  inline SortableVector<Data> &
+  SortableVector<Data>::operator=(const SortableVector<Data> &Svec) {
+    Vector<Data>::operator=(Svec);
+    return *this;
+  }
+  
+  //Move Assignment
+  template <typename Data>
+  inline SortableVector<Data> &
+  SortableVector<Data>::operator=(SortableVector<Data> &&Svec) noexcept {
+    Vector<Data>::operator=(std::move(Svec));
+    return *this;
+  }
+  
+  
+  
+  
+  /* ************************************************************************** */
+  
+  }
+  

@@ -1,68 +1,83 @@
-
 namespace lasd {
 
-/* ************************************************************************** */
-
-template <typename Data>
-bool DictionaryContainer<Data>::InsertAll(const TraversableContainer<Data> &container) {
-  bool inserted = true;
-  container.Traverse([&inserted, this](const Data &data) {
-    if (inserted && !Insert(data)) {
-      inserted = false;
-    }
-  });
-  return inserted;
-}
-
-template <typename Data>
-inline bool
-DictionaryContainer<Data>::InsertAll(MappableContainer<Data> &&container) {
-  bool result = true;
-  container.Map([this, &result](Data &cData) {
-    result &= this->Insert(std::move(cData));
-  });
-  return result;
-}
-
-template <typename Data>
-inline bool
-DictionaryContainer<Data>::RemoveAll(const TraversableContainer<Data> &container) {
-  bool result = true;
-  container.Traverse([this, &result](const Data &cData) {
-    result &= this->Remove(cData);
-  });
-  return result;
-}
-
-template <typename Data>
-inline bool
-DictionaryContainer<Data>::InsertSome(const TraversableContainer<Data> &container) {
-  bool result = false;
-  container.Traverse([this, &result](const Data &cData) {
-    result |= this->Insert(cData);
-  });
-  return result;
-}
-
-template <typename Data>
-inline bool
-DictionaryContainer<Data>::InsertSome(MappableContainer<Data> &&container) {
-  bool result = false;
-  container.Map([this, &result](Data &cData) {
-    result |= this->Insert(std::move(cData));
-  });
-  return result;
-}
-
-template <typename Data>
-inline bool     
-DictionaryContainer<Data>::RemoveSome(const TraversableContainer<Data> &container) {
-  bool result = false;
-  container.Traverse([this, &result](const Data &cData) {
-    result |= this->Remove(cData);
-  });
-  return result;
-}
-/* ************************************************************************** */
-
-}
+  /* ************************************************************************** */
+  
+  //DictionaryContainer
+  /* ************************************************************************** */
+  
+  //InsertAll copy
+  template <typename Data>
+  inline bool
+  DictionaryContainer<Data>::InsertAll(const TraversableContainer<Data> &Tcon) {
+    bool result = true;
+    Tcon.Traverse([this, &result](const Data &currData) {
+      result &= this->Insert(currData);
+    });
+    return result;
+  }
+  
+  
+  //InsertAll move
+  template <typename Data>
+  inline bool
+  DictionaryContainer<Data>::InsertAll(MappableContainer<Data> &&Mcon) {
+    bool result = true;
+    Mcon.Map([this, &result](const Data &currData) {
+      result &= this->Insert(std::move(currData));
+    });
+    return result;
+  }
+  
+  
+  //RemoveAll
+  template <typename Data>
+  inline bool
+  DictionaryContainer<Data>::RemoveAll(const TraversableContainer<Data> &Tcon) {
+    bool result = true;
+    Tcon.Traverse([this, &result](const Data &currData) {
+      result &= this->Remove(currData);
+    });
+    return result;
+  }
+  
+  
+  //InsertSome copy
+  template <typename Data>
+  inline bool
+  DictionaryContainer<Data>::InsertSome(const TraversableContainer<Data> &Tcon) {
+    bool result = false;
+    Tcon.Traverse([this, &result](const Data &currData) {
+      result |= this->Insert(currData);
+    });
+    return result;
+  }
+  
+  
+  //InsertSome move
+  template <typename Data>
+  inline bool
+  DictionaryContainer<Data>::InsertSome(MappableContainer<Data> &&Mcon) {
+    bool result = false;
+    Mcon.Map([this, &result](const Data &currData) {
+      result |= this->Insert(std::move(currData));
+    });
+    return result;
+  }
+  
+  
+  //RemoveSome
+  template <typename Data>
+  inline bool
+  DictionaryContainer<Data>::RemoveSome(const TraversableContainer<Data> &Tcon) {
+    bool result = false;
+    Tcon.Traverse([this, &result](const Data &currData) {
+      result |= this->Remove(currData);
+    });
+    return result;
+  }
+  
+  
+  /* ************************************************************************** */
+  
+  }
+  

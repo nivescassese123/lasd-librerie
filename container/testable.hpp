@@ -27,7 +27,7 @@ protected:
 public:
 
   // Destructor
-  virtual ~TestableContainer() = default;
+  ~TestableContainer() = default;
 
   /* ************************************************************************ */
 
@@ -35,13 +35,13 @@ public:
   TestableContainer &operator=(const TestableContainer &) = delete; // Copy assignment of abstract types is not possible.
 
   // Move assignment
-  TestableContainer &operator=(TestableContainer &&) noexcept = delete;// Move assignment of abstract types is not possible.
+  TestableContainer &operator=(TestableContainer &&) = delete;// Move assignment of abstract types is not possible.
 
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const TestableContainer &) const noexcept = delete;
-  bool operator!=(const TestableContainer &) const noexcept = delete;
+  bool operator==(const TestableContainer &) const = delete;
+  bool operator!=(const TestableContainer &) const = delete;
 
   /* ************************************************************************ */
 

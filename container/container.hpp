@@ -1,4 +1,3 @@
-
 #ifndef CONTAINER_HPP
 #define CONTAINER_HPP
 
@@ -16,48 +15,58 @@ private:
 
 protected:
 
-unsigned long size{0}; // Number of elements in the container
+  unsigned long size = 0;
 
   /* ************************************************************************ */
 
   // Default constructor
-   Container() = default;
+    Container() = default;
 
 public:
 
   // Destructor
-  virtual ~Container() = default; // Destructor of abstract types must be declared as virtual
+    virtual ~Container() = default;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  Container &operator=(const Container &) = delete; // Copy assignment of abstract types is not possible.
+    Container& operator=(const Container&) = delete; // Copy assignment of abstract types is not possible.
 
   // Move assignment
-  Container &operator=(Container &&) noexcept = delete; // Move assignment of abstract types is not possible.
+    Container& operator=(Container&&) = delete; // Move assignment of abstract types is not possible.
 
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const Container &) const noexcept = delete;
-  bool operator!=(const Container &) const noexcept = delete;
+    bool operator==(const Container&) = delete; // Comparison of abstract types is not possible.
+    bool operator!=(const Container&) = delete; // Comparison of abstract types is not possible.
 
   /* ************************************************************************ */
 
-  // Specific member functions
+  // Specific member functions 
 
-  inline virtual bool Empty() const noexcept { 
-    return 0 == size; }
+  //Empty()
 
-  inline virtual unsigned long Size() const noexcept { 
-    return size; }
+    virtual bool Empty()const noexcept{// (concrete function should not throw exceptions)
+      return size==0;
+    } ; 
+
+
+
+  //Size() 
+
+    virtual unsigned long Size()const noexcept{// (concrete function should not throw exceptions)
+      return size;
+    }
+
 };
 
 
 /* ************************************************************************** */
+/* ************************************************************************** */
 
-class ClearableContainer : virtual public Container {
-  // Must extend Container
+class ClearableContainer : virtual public Container{
+  
 
 private:
 
@@ -65,38 +74,41 @@ private:
 
 protected:
 
-  // ...
+  using Container::size;
 
 public:
 
   // Destructor
-  virtual ~ClearableContainer() = default;
+    ~ClearableContainer() = default;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  ClearableContainer &operator=(const ClearableContainer &) = delete; // Copy assignment of abstract types is not possible.
+  ClearableContainer& operator=(const ClearableContainer&) = delete; // Copy assignment of abstract types is not possible.
 
   // Move assignment
-  ClearableContainer &operator=(ClearableContainer &&) noexcept = delete; // Move assignment of abstract types is not possible.
+  ClearableContainer& operator=(ClearableContainer&&) = delete; // Move assignment of abstract types is not possible.
 
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const ClearableContainer &Clc) const noexcept = delete;
-  bool operator!=(const ClearableContainer &Clc) const noexcept = delete;
+  bool operator==(const ClearableContainer&) = delete; // Comparison of abstract types is not possible.
+  bool operator!=(const ClearableContainer&) = delete; // Comparison of abstract types is not possible.
+
   /* ************************************************************************ */
 
   // Specific member functions
 
-  virtual void Clear() = 0; // Clear the container (make it empty)
+  //Clear() 
+
+    virtual void Clear() = 0;
 
 };
 
 /* ************************************************************************** */
 
-class ResizableContainer : virtual public ClearableContainer {
-  // Must extend ClearableContainer
+class ResizableContainer: virtual public ClearableContainer{// Must extend ClearableContainer
+  
 
 private:
 
@@ -104,39 +116,42 @@ private:
 
 protected:
 
-  // ...
+  using Container::size;
 
 public:
 
   // Destructor
-  virtual ~ResizableContainer() = default;
+    ~ResizableContainer() = default;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  ResizableContainer &operator=(const ResizableContainer &Clc) noexcept = delete; // Copy assignment of abstract types is not possible.
+    ResizableContainer& operator=(const ResizableContainer&) = delete;// Copy assignment of abstract types is not possible.
 
   // Move assignment
-  ResizableContainer &operator=(ResizableContainer &&Clc) noexcept = delete; // Move assignment of abstract types is not possible.
+    ResizableContainer& operator=(ResizableContainer&&) = delete;// Move assignment of abstract types is not possible.
 
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const ResizableContainer &Clc) const noexcept = delete;
-  bool operator!=(const ResizableContainer &Clc) const noexcept = delete;
+    bool operator==(const ResizableContainer&) const = delete;// Comparison of abstract types is not possible.
+    bool operator!=(const ResizableContainer&) const = delete;// Comparison of abstract types is not possible.
+
   /* ************************************************************************ */
 
   // Specific member functions
 
-  virtual void Resize(unsigned long) = 0;
+  //Resize()
+
+    virtual void Resize(unsigned long newSize) = 0;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from ClearableContainer)
 
-  void Clear() override {
-    Resize(0); // Resize the container to size 0
-  }; // Override ClearableContainer member
+    void Clear() override{// Override ClearableContainer member
+      Resize(0); 
+      }; 
 
 };
 
@@ -145,3 +160,4 @@ public:
 }
 
 #endif
+

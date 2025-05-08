@@ -1,93 +1,128 @@
-#include <random>
 
 namespace lasd {
 
-/* ************************************************************************** */
-
-//linear container
-template <typename Data>
-inline bool LinearContainer<Data>::operator==(
-    const LinearContainer<Data> &con) const noexcept {
-  if (size != con.size) {
-    return false;
+  /* ************************************************************************** */
+  
+  //LinearContainer
+  /* ************************************************************************** */
+  
+  //Operator ==
+  template <typename Data>
+  bool LinearContainer<Data>::operator==(
+      const LinearContainer<Data> &Lcon) const noexcept {
+    if (size != Lcon.size) { return false; }
+  
+    for (unsigned int i = 0; i < size; ++i) {
+      if ((*this)[i] != Lcon[i]) {
+        return false;
+      }
+    }
+    return true;
   }
-    
-  for (unsigned int i = 0; i < size; ++i) {
-    if ((*this)[i] != con[i]) {
-      return false;
+  
+  //Operator !=
+  template <typename Data>
+  bool LinearContainer<Data>::operator!=(
+      const LinearContainer<Data> &Lcon) const noexcept {
+    return !(*this == Lcon);
+  }
+  
+  
+  //Front() 
+  template <typename Data> inline const Data &LinearContainer<Data>::Front() const {
+    if (size == 0) {
+      throw std::out_of_range("Empty structure.");
+    }
+    return (*this)[0];
+  }
+  
+  
+  //Back()
+  template <typename Data>
+  inline const Data &LinearContainer<Data>::Back() const {
+    if (size == 0) {
+      throw std::out_of_range("Empty structure.");
+    }
+    return (*this)[size - 1];
+  }
+  
+  
+  
+  
+  //Override function
+  /* ************************************************************************** */
+  template <typename Data>
+  void LinearContainer<Data>::Traverse(const TraverseFun fun) const {
+    PreOrderTraverse(fun);
+  } // Override TraversableContainer member
+  
+
+  
+  //PreOrderTraverse
+  template <typename Data>
+  void LinearContainer<Data>::PreOrderTraverse(const TraverseFun fun) const {
+    for (unsigned int i = 0; i < size; ++i) {
+      fun((*this)[i]);
     }
   }
-  return true;
-}
-
-template <typename Data>
-inline bool LinearContainer<Data>::operator!=(
-    const LinearContainer<Data> &con) const noexcept {
-  return !(*this == con);
-}
-
-template <typename Data>
-inline const Data &LinearContainer<Data>::Front() const {
-  if (size == 0) {
-    throw std::length_error("Empty structure.");
+  
+  
+  //PostOrderTraverse
+  template <typename Data>
+  void LinearContainer<Data>::PostOrderTraverse(const TraverseFun fun) const {
+  
+    for (unsigned int i = size; i > 0;) {
+      fun((*this)[--i]);
+    }
   }
-  return (*this)[0];
-}
-
-template <typename Data>
-inline const Data &LinearContainer<Data>::Back() const {
-  if (size == 0) {
-    throw std::length_error("Empty structure.");
+  
+  
+  
+  //MutableLinearContainer
+  /* ************************************************************************** */
+  
+  
+  //Front()
+  template <typename Data>  Data &MutableLinearContainer<Data>::Front() {
+    if (size != 0) {
+      throw std::out_of_range("Empty structure.");
+    }
+    return (*this)[0];
   }
-  return (*this)[size - 1];
-}
-
-
-template <typename Data>
-void LinearContainer<Data>::PreOrderTraverse(const TraverseFun func) const {
-  for (unsigned int i = 0; i < size; ++i) {
-    func((*this)[i]);
+  
+  
+  
+  //Back()
+  template <typename Data>  Data &MutableLinearContainer<Data>::Back() {
+    if (size == 0) {
+      throw std::out_of_range("Empty structure.");
+    }
+    return (*this)[size - 1];
   }
-}
-
-template <typename Data>
-void LinearContainer<Data>::PostOrderTraverse(const TraverseFun func) const {
-
-  for (unsigned int i = size; i > 0;) {
-    func((*this)[--i]);
+  
+  
+  //Override function
+  /* ************************************************************************** */
+  // Override MappableContainer member
+  template <typename Data> void MutableLinearContainer<Data>::Map(MapFun fun) {
+    PreOrderMap(fun);
+  } // Override MappableContainer member
+  
+  //PreOrderMap
+  template <typename Data> void MutableLinearContainer<Data>::PreOrderMap(MapFun fun) {
+    for (unsigned int i= 0; i < size; ++i) {
+      fun((*this)[i]);
+    }
   }
-}
-
-//mutable linear container
-template <typename Data> inline Data &MutableLinearContainer<Data>::Front() {
-  if (size != 0) {
-    throw std::length_error("Empty structure.");
+  
+  
+  
+  //PostOrderMap
+  template <typename Data> void MutableLinearContainer<Data>::PostOrderMap(MapFun fun) {
+    for (unsigned int i = size; i > 0;) {
+      fun((*this)[--i]);
+    }
   }
-  return (*this)[0];
-}
-
-template <typename Data> inline Data &MutableLinearContainer<Data>::Back() {
-  if (size == 0) {
-    throw std::length_error("Empty structure.");
-  }
-  return (*this)[size - 1];
-}
-
-
-//PreOrderMap
-template <typename Data> void MutableLinearContainer<Data>::PreOrderMap(MapFun fun) {
-  for (unsigned int i= 0; i < size; ++i) {
-    fun((*this)[i]);
-  }
-}
-
-//PostOrderMap
-template <typename Data> void MutableLinearContainer<Data>::PostOrderMap(MapFun fun) {
-  for (unsigned int i = size; i > 0;) {
-    fun((*this)[--i]);
-  }
-}
-
 
 
 

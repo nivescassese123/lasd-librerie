@@ -51,7 +51,7 @@ public:
 
   // Specific member functions
 
-  virtual const Data &operator[](const unsigned long int) const = 0; // (non-mutable version; concrete function must throw std::out_of_range when out of range)
+  virtual const Data &operator[](unsigned long) const = 0; // (non-mutable version; concrete function must throw std::out_of_range when out of range)
 
   virtual inline  const Data &Front() const; // (non-mutable version; concrete function must throw std::length_error when empty)
 
@@ -63,9 +63,7 @@ public:
 
   using typename TraversableContainer<Data>::TraverseFun;
 
-  inline void Traverse(TraverseFun fun) const override {
-    PreOrderTraverse(fun);
-  }; // Override TraversableContainer member
+  inline void Traverse(TraverseFun) const override; // Override TraversableContainer member
 
   /* ************************************************************************ */
 
@@ -116,11 +114,11 @@ public:
 
   // Specific member functions
 
-  virtual Data &operator[](const unsigned long int) = 0; // (mutable version; concrete function must throw std::out_of_range when out of range)
+  virtual inline Data &operator[](unsigned long) = 0; // (mutable version; concrete function must throw std::out_of_range when out of range)
 
-  virtual inline Data &Front(); // (mutable version; concrete function must throw std::length_error when empty)
+  virtual Data &Front(); // (mutable version; concrete function must throw std::length_error when empty)
 
-  virtual inline Data &Back(); // (mutable version; concrete function must throw std::length_error when empty)
+  virtual Data &Back(); // (mutable version; concrete function must throw std::length_error when empty)
 
   /* ************************************************************************ */
 
@@ -128,9 +126,7 @@ public:
 
   using typename MappableContainer<Data>::MapFun;
 
-  virtual void Map(MapFun fun) override {
-    PreOrderMap(fun);
-  };// Override MappableContainer member
+  inline void Map(MapFun fun) override;
 
   /* ************************************************************************ */
 
