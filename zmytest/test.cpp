@@ -10,5 +10,6 @@ using namespace std;
 /* ************************************************************************** */
 
 void mytest() {
+  cout << "Esecuzione dei miei test..." << endl;
   // ...
 }

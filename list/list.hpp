@@ -15,22 +15,18 @@ namespace lasd {
 template <typename Data>
 class List : virtual public MutableLinearContainer<Data>,
              virtual public ClearableContainer {
-  // Must extend MutableLinearContainer<Data>,
-  //             ClearableContainer
+
 
 private:
 
-  // ...
+
 
 protected:
-
-
 
     using Container::size;
 
   struct Node {
 
-    // Data
       Data element;
       Node* next = nullptr;
 
@@ -71,7 +67,7 @@ protected:
 
   };
 
-    Node *Tail= nullptr;//posso estendere ma non cancellare
+    Node *Tail= nullptr;
     Node *Head= nullptr;
 
 public:
@@ -82,8 +78,8 @@ public:
   /* ************************************************************************ */
 
   // Specific constructor
-    List(const TraversableContainer<Data> &); // A list obtained from a TraversableContainer
-    List(MappableContainer<Data> &&); // A list obtained from a MappableContainer
+    List(const TraversableContainer<Data> &);
+    List(MappableContainer<Data> &&); 
 
   /* ************************************************************************ */
 
@@ -117,14 +113,14 @@ public:
   // Specific member functions
 
   //Front
-    void InsertAtFront(const Data &); // Copy of the value
-    void InsertAtFront(Data &&); // Move of the value
+    void InsertAtFront(const Data&); // Copy of the value
+    void InsertAtFront(Data&&); // Move of the value
     void RemoveFromFront(); // (must throw std::length_error when empty)
     Data FrontNRemove(); // (must throw std::length_error when empty)
 
   //Back
-    void InsertAtBack(const Data &); // Copy of the value
-    void InsertAtBack(Data &&); // Move of the value
+    void InsertAtBack(const Data&); // Copy of the value
+    void InsertAtBack(Data&&); // Move of the value
     void RemoveFromBack(); // (must throw std::length_error when empty)
     Data BackNRemove() ; // (must throw std::length_error when empty)
 
@@ -162,13 +158,17 @@ public:
 
   // Specific member function (inherited from PreOrderMappableContainer)
 
-    inline void PreOrderMap(MapFun fun) override { PreOrderMap(fun, Head); } // Override PreOrderMappableContainer member
+    inline void PreOrderMap(MapFun fun) override {
+       PreOrderMap(fun, Head);
+       } 
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderMappableContainer)
 
-    inline void PostOrderMap(MapFun fun) override { PostOrderMap(fun, Head); } // Override PostOrderMappableContainer member
+    inline void PostOrderMap(MapFun fun) override { 
+      PostOrderMap(fun, Head);
+     } 
 
   /* ************************************************************************ */
 
@@ -184,7 +184,7 @@ public:
 
   // Specific member function (inherited from PreOrderTraversableContainer)
 
-    inline void PreOrderTraverse(TraverseFun fun) const override{// Override PreOrderTraversableContainer member
+    inline void PreOrderTraverse(TraverseFun fun) const override {
     PreOrderTraverse(fun, Head);
     } 
 
@@ -192,7 +192,7 @@ public:
 
   // Specific member function (inherited from PostOrderTraversableContainer)
 
-    inline void PostOrderTraverse(TraverseFun fun) const override {// Override PostOrderTraversableContainer member
+    inline void PostOrderTraverse(TraverseFun fun) const override {
       PostOrderTraverse(fun, Head);
     } 
 
@@ -200,7 +200,7 @@ public:
 
   // Specific member function (inherited from ClearableContainer)
 
-    inline void Clear()noexcept override;  // Override ClearableContainer member
+    inline void Clear() noexcept override;  
 
     using TestableContainer<Data>::Exists;
 

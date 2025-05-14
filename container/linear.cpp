@@ -2,11 +2,8 @@
 namespace lasd {
 
   /* ************************************************************************** */
-  
-  //LinearContainer
-  /* ************************************************************************** */
-  
-  //Operator ==
+
+
   template <typename Data>
   bool LinearContainer<Data>::operator==(
       const LinearContainer<Data> &Lcon) const noexcept {
@@ -20,15 +17,12 @@ namespace lasd {
     return true;
   }
   
-  //Operator !=
   template <typename Data>
   bool LinearContainer<Data>::operator!=(
       const LinearContainer<Data> &Lcon) const noexcept {
     return !(*this == Lcon);
   }
   
-  
-  //Front() 
   template <typename Data> inline const Data &LinearContainer<Data>::Front() const {
     if (size == 0) {
       throw std::out_of_range("Empty structure.");
@@ -36,8 +30,6 @@ namespace lasd {
     return (*this)[0];
   }
   
-  
-  //Back()
   template <typename Data>
   inline const Data &LinearContainer<Data>::Back() const {
     if (size == 0) {
@@ -45,29 +37,14 @@ namespace lasd {
     }
     return (*this)[size - 1];
   }
-  
-  
-  
-  
-  //Override function
-  /* ************************************************************************** */
+
+
   template <typename Data>
   void LinearContainer<Data>::Traverse(const TraverseFun fun) const {
     PreOrderTraverse(fun);
-  } // Override TraversableContainer member
-  
+  } 
 
-  
-  //PreOrderTraverse
-  template <typename Data>
-  void LinearContainer<Data>::PreOrderTraverse(const TraverseFun fun) const {
-    for (unsigned int i = 0; i < size; ++i) {
-      fun((*this)[i]);
-    }
-  }
-  
-  
-  //PostOrderTraverse
+
   template <typename Data>
   void LinearContainer<Data>::PostOrderTraverse(const TraverseFun fun) const {
   
@@ -76,48 +53,39 @@ namespace lasd {
     }
   }
   
+
+  template <typename Data>
+  void LinearContainer<Data>::PreOrderTraverse(const TraverseFun fun) const {
+    for (unsigned int i = 0; i < size; ++i) {
+      fun((*this)[i]);
+    }
+  }
   
-  
-  //MutableLinearContainer
-  /* ************************************************************************** */
-  
-  
-  //Front()
-  template <typename Data>  Data &MutableLinearContainer<Data>::Front() {
+
+  template <typename Data>Data &MutableLinearContainer<Data>::Front() {
     if (size != 0) {
       throw std::out_of_range("Empty structure.");
     }
     return (*this)[0];
   }
   
-  
-  
-  //Back()
-  template <typename Data>  Data &MutableLinearContainer<Data>::Back() {
+  template <typename Data>Data &MutableLinearContainer<Data>::Back() {
     if (size == 0) {
       throw std::out_of_range("Empty structure.");
     }
     return (*this)[size - 1];
   }
   
-  
-  //Override function
-  /* ************************************************************************** */
-  // Override MappableContainer member
-  template <typename Data> void MutableLinearContainer<Data>::Map(MapFun fun) {
-    PreOrderMap(fun);
-  } // Override MappableContainer member
-  
-  //PreOrderMap
-  template <typename Data> void MutableLinearContainer<Data>::PreOrderMap(MapFun fun) {
+    template <typename Data> void MutableLinearContainer<Data>::PreOrderMap(MapFun fun) {
     for (unsigned int i= 0; i < size; ++i) {
       fun((*this)[i]);
     }
   }
+
+  template <typename Data> void MutableLinearContainer<Data>::Map(MapFun fun) {
+    PreOrderMap(fun);
+  } 
   
-  
-  
-  //PostOrderMap
   template <typename Data> void MutableLinearContainer<Data>::PostOrderMap(MapFun fun) {
     for (unsigned int i = size; i > 0;) {
       fun((*this)[--i]);
@@ -125,10 +93,6 @@ namespace lasd {
   }
 
 
-
-
-// Sortable Linear Container
-/* ************************************************************************** */
 
 template <typename Data>
 void SortableLinearContainer<Data>::quickSort(unsigned long start, unsigned long end) noexcept {
@@ -206,4 +170,4 @@ const noexcept {
     return distribution(generator);
 }
 
-} // namespace lasd
+} 

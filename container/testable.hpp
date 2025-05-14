@@ -14,16 +14,15 @@ namespace lasd {
 
 template <typename Data>
 class TestableContainer : virtual public Container {
-  // Must extend Container
+  
 
 private:
 
-  // ...
+  
 
 protected:
 
-  // ...
-
+  
 public:
 
   // Destructor
@@ -32,10 +31,10 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  TestableContainer &operator=(const TestableContainer &) = delete; // Copy assignment of abstract types is not possible.
+  TestableContainer& operator=(const TestableContainer &) = delete; 
 
   // Move assignment
-  TestableContainer &operator=(TestableContainer &&) = delete;// Move assignment of abstract types is not possible.
+  TestableContainer& operator=(TestableContainer &&) = delete;
 
   /* ************************************************************************ */
 
@@ -47,8 +46,7 @@ public:
 
   // Specific member function
 
-  virtual bool Exists(const Data &) const noexcept = 0; // (concrete function should not throw exceptions)
-
+  virtual bool Exists(const Data &) const noexcept = 0; 
 };
 
 /* ************************************************************************** */

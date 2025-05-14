@@ -17,15 +17,15 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class MappableContainer : virtual public TraversableContainer<Data>{  // Must extend TraversableContainer<Data>
+class MappableContainer : virtual public TraversableContainer<Data> {  
 
 private:
 
-  // ...
+  
 
 protected:
 
-  // ...
+  
 
 public:
 
@@ -59,9 +59,9 @@ public:
 /* ************************************************************************** */
 
 template <typename Data>
-class PreOrderMappableContainer: virtual public MappableContainer<Data>, virtual public PreOrderTraversableContainer<Data>  {
-  // Must extend MappableContainer<Data>,
-  //             PreOrderTraversableContainer<Data>
+class PreOrderMappableContainer: virtual public MappableContainer<Data>, 
+                                 virtual public PreOrderTraversableContainer<Data>  {
+
 
 private:
 
@@ -103,7 +103,9 @@ public:
 
   // Specific member function (inherited from MappableContainer)
 
-    inline void  Map(const MapFun fun) override{PreOrderMap(fun);}; // Override MappableContainer member
+    inline void  Map(const MapFun fun) override{ 
+      PreOrderMap(fun); 
+    }; 
 
 };
 
@@ -111,17 +113,16 @@ public:
 
 template <typename Data>
 class PostOrderMappableContainer : virtual public MappableContainer<Data>,
-virtual public PostOrderTraversableContainer<Data> {
-  // Must extend MappableContainer<Data>,
-  //             PostOrderTraversableContainer<Data>
+                                   virtual public PostOrderTraversableContainer<Data> {
+
 
 private:
 
-  // ...
+  
 
 protected:
 
-  // ...
+ 
 
 public:
 
@@ -154,7 +155,9 @@ public:
 
   // Specific member function (inherited from MappableContainer)
 
-   inline void  Map(const MapFun fun) override{PostOrderMap(fun);}; // Override MappableContainer member
+   inline void  Map(const MapFun fun) override{
+    PostOrderMap(fun);
+  }; 
 
 };
 
@@ -165,4 +168,3 @@ public:
 #include "mappable.cpp"
 
 #endif
-

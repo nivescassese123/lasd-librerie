@@ -16,12 +16,11 @@ namespace lasd {
 template <typename Data>
 class SetLst : virtual public Set<Data>,
                virtual public List<Data> {
-  // Must extend Set<Data>,
-  //             List<Data>
+
 
 private:
 
-  // ...
+ 
 
 protected:
    using List<Data>::Node;
@@ -46,16 +45,12 @@ public:
   /* ************************************************************************ */
 
   // Copy constructor
-    SetLst(const SetLst<Data>& val) : List<Data>(val) {
-      // Non serve nulla in più, poiché List<Data>(other) copia già tutto in ordine e senza duplicati.
-    }
+    SetLst(const SetLst<Data>& val) : List<Data>(val) {}
 
 
   // Move constructor
 
-    SetLst(SetLst<Data>&& val) noexcept : List<Data>(std::move(val)) {
-      // Anche qui: nulla di aggiuntivo, il move di List si occupa di tutto
-    }
+    SetLst(SetLst<Data>&& val) noexcept : List<Data>(std::move(val)) {}
 
     
 

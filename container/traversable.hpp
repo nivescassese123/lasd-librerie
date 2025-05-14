@@ -16,16 +16,16 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class TraversableContainer : virtual public TestableContainer<Data>{// Must extend TestableContainer<Data>
+class TraversableContainer : virtual public TestableContainer<Data> {
   
 
 private:
 
-  // ...
+ 
 
 protected:
 
-  // ...
+ 
 
 public:
 
@@ -35,21 +35,21 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-    TraversableContainer& operator=(const TraversableContainer&) = delete; // Copy assignment of abstract types is not possible.
+    TraversableContainer& operator=(const TraversableContainer&) = delete; 
 
   // Move assignment
-    TraversableContainer& operator=(TraversableContainer&&) = delete; // Move assignment of abstract types is not possible.
+    TraversableContainer& operator=(TraversableContainer&&) = delete;
 
   /* ************************************************************************ */
 
   // Comparison operators
-    bool operator==(const TraversableContainer &)const noexcept = delete ; // Comparison of abstract types might be possible.
-    bool operator!=(const TraversableContainer &)const noexcept = delete ; // Comparison of abstract types might be possible.
+    bool operator==(const TraversableContainer &)const noexcept = delete ; 
+    bool operator!=(const TraversableContainer &)const noexcept = delete ;
 
   /* ************************************************************************ */
 
   // Specific member function
-    using TraverseFun = std::function<void(const Data &)>; //Controlla alla fine della pagina per i commenti 
+    using TraverseFun = std::function<void(const Data &)>;
     
     virtual void Traverse(TraverseFun)const = 0;
 
@@ -63,22 +63,22 @@ public:
 
   // Specific member function (inherited from TestableContainer)
 
-   inline bool Exists(const Data &) const noexcept override; // Override TestableContainer member
+   inline bool Exists(const Data &) const noexcept override; 
 
 };
 
 /* ************************************************************************** */
 
 template <typename Data>
-class PreOrderTraversableContainer : virtual public TraversableContainer<Data> {// Must extend TraversableContainer<Data>
+class PreOrderTraversableContainer : virtual public TraversableContainer<Data> {
 
 private:
 
-  // ...
+
 
 protected:
 
-  // ...
+  
 
 public:
 
@@ -88,16 +88,15 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-    PreOrderTraversableContainer& operator=(const PreOrderTraversableContainer&) = delete; // Copy assignment of abstract types is not possible.
-
+    PreOrderTraversableContainer& operator=(const PreOrderTraversableContainer&) = delete;
   // Move assignment
-    PreOrderTraversableContainer& operator=(PreOrderTraversableContainer&&) = delete; // Move assignment of abstract types is not possible.
+    PreOrderTraversableContainer& operator=(PreOrderTraversableContainer&&) = delete; 
 
   /* ************************************************************************ */
 
   // Comparison operators
-    bool operator==(const PreOrderTraversableContainer &)const noexcept = delete ; // Comparison of abstract types might be possible.
-    bool operator!=(const PreOrderTraversableContainer &)const noexcept = delete ; // Comparison of abstract types might be possible.
+    bool operator==(const PreOrderTraversableContainer &)const noexcept = delete ; 
+    bool operator!=(const PreOrderTraversableContainer &)const noexcept = delete ; 
 
   /* ************************************************************************ */
 
@@ -117,22 +116,23 @@ public:
 
   // Specific member function (inherited from TraversableContainer)
 
-   inline void Traverse(const TraverseFun fun) const override { PreOrderTraverse(fun); }  // Override TraversableContainer member
+   inline void Traverse(const TraverseFun fun) const override {
+     PreOrderTraverse(fun); }  
 
 };
 
 /* ************************************************************************** */
 
 template <typename Data>
-class PostOrderTraversableContainer : virtual public TraversableContainer<Data> {  // Must extend TraversableContainer<Data>
+class PostOrderTraversableContainer : virtual public TraversableContainer<Data> {  
 
 private:
 
-  // ...
+  
 
 protected:
 
-  // ...
+ 
 
 public:
 
@@ -142,16 +142,16 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-    PostOrderTraversableContainer &operator=(const PostOrderTraversableContainer &) = delete; // Copy assignment of abstract types is not possible.
+    PostOrderTraversableContainer &operator=(const PostOrderTraversableContainer &) = delete; 
 
   // Move assignment
-    PostOrderTraversableContainer &operator=(PostOrderTraversableContainer &&) noexcept = delete; // Move assignment of abstract types is not possible.
+    PostOrderTraversableContainer &operator=(PostOrderTraversableContainer &&) noexcept = delete; 
 
   /* ************************************************************************ */
 
   // Comparison operators
-    bool operator==(const PostOrderTraversableContainer &) const noexcept = delete; // Comparison of abstract types might be possible.
-    bool operator!=(const PostOrderTraversableContainer &) const noexcept = delete; // Comparison of abstract types might be possible.
+    bool operator==(const PostOrderTraversableContainer &) const noexcept = delete; 
+    bool operator!=(const PostOrderTraversableContainer &) const noexcept = delete; 
 
   /* ************************************************************************ */
 
@@ -171,7 +171,9 @@ public:
 
   // Specific member function (inherited from TraversableContainer)
 
-    inline void Traverse(const TraverseFun fun) const override { PostOrderTraverse(fun); }; // Override TraversableContainer member
+    inline void Traverse(const TraverseFun fun) const override {
+       PostOrderTraverse(fun); 
+      }; 
 
 };
 

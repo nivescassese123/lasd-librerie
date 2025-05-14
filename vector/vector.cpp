@@ -9,8 +9,21 @@ namespace lasd {
       elements = new Data[size]{};
   }
   
+
   
-  //Traversable
+  template <typename Data>
+  inline Vector<Data>::Vector(Vector<Data> &&vec) {
+    std::swap(size, vec.size);
+    std::swap(elements, vec.elements);
+  }
+
+
+  template <typename Data>
+  inline Vector<Data>::Vector(const Vector<Data> &vec) : Vector(vec.size) {
+    std::uninitialized_copy(vec.elements, vec.elements + size, elements);
+  }
+  
+
   template<typename Data>
   Vector<Data>::Vector(const TraversableContainer<Data> &Tcon ): Vector(Tcon.Size()) {
     unsigned long i{0};
@@ -19,7 +32,7 @@ namespace lasd {
   }
   
   
-  //Mappable
+
   template <typename Data>
   inline Vector<Data>::Vector(MappableContainer<Data> &&con): Vector(con.Size()) {
     unsigned long i{0};
@@ -27,21 +40,7 @@ namespace lasd {
         [this, &i](Data &currData) { elements[i++] = std::move(currData); });
   }
   
-  //CopyCostructor
-  template <typename Data>
-  inline Vector<Data>::Vector(const Vector<Data> &vec) : Vector(vec.size) {
-    std::uninitialized_copy(vec.elements, vec.elements + size, elements);
-  }
   
-  //MoveCostructor
-  template <typename Data>
-  inline Vector<Data>::Vector(Vector<Data> &&vec) {
-    std::swap(size, vec.size);
-    std::swap(elements, vec.elements);
-  }
-  
-  //Destructor
-  /* ************************************************************************** */
   
   template<typename Data>
   Vector<Data>::~Vector(){
@@ -97,11 +96,10 @@ namespace lasd {
   //Operator !=
   template <typename Data>
   inline bool Vector<Data>::operator!=(const Vector<Data> &vector) const noexcept {
-    return !(*this == vector);//utilizzo l'operatore appena creato
+    return !(*this == vector);
   }
   
   
-  // Specific member functions (inherited from MutableLinearContainer)
   /* ************************************************************************** */
   
   //Mutable Operator[]
@@ -162,10 +160,7 @@ namespace lasd {
     throw std::length_error("The Vector is empty");
   }
   
-  
-  // Specific member functions inherited
-  /* ************************************************************************** */
-  
+
   //Clear
   template <typename Data>
   void Vector<Data>::Clear(){
@@ -199,12 +194,6 @@ namespace lasd {
         
   }
   
-  
-  
-  //SortableVector
-  /* ************************************************************************** */
-  /* ************************************************************************** */
-  
   //Copy Assignment
   template <typename Data>
   inline SortableVector<Data> &
@@ -220,8 +209,6 @@ namespace lasd {
     Vector<Data>::operator=(std::move(Svec));
     return *this;
   }
-  
-  
   
   
   /* ************************************************************************** */

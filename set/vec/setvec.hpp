@@ -16,12 +16,10 @@ namespace lasd {
 template <typename Data>
 class SetVec : virtual public Set<Data>,
                virtual public ResizableContainer {
-  // Must extend Set<Data>,
-  //             ResizableContainer
 
 private:
 
-  // ...
+  
 
 protected:
 
@@ -91,7 +89,7 @@ public:
 
   // Specific member functions (inherited from DictionaryContainer)
 
-    bool Insert(const Data& ) override; // Override DictionaryContainer member (copy of the value)
+    bool Insert(const Data&) override; // Override DictionaryContainer member (copy of the value)
     bool Insert(Data&&) override; // Override DictionaryContainer member (move of the value)
     bool Remove(const Data&) override; // Override DictionaryContainer member
 
@@ -105,7 +103,7 @@ public:
 
   // Specific member function (inherited from TestableContainer)
 
-    bool Exists(const Data &)const noexcept override  ; // Override TestableContainer member
+    bool Exists(const Data&)const noexcept override; // Override TestableContainer member
 
   /* ************************************************************************ */
 

@@ -7,23 +7,7 @@ namespace lasd {
 /* ************************************************************************** */
 
 
-// Specific constructors
-/* ************************************************************************** */
 
-//Traversable
-template <typename Data>
-SetVec<Data>::SetVec(const TraversableContainer<Data>& Tcon) {
-    Tcon.Traverse([this](const Data& elem) {
-        if (!Exists(elem)) {
-            Insert(elem);
-        }
-    });
-}
-
-
-
-
-//MappableContainer
 template <typename Data>
 SetVec<Data>::SetVec(MappableContainer<Data>&& Mcon) {
     Mcon.Traverse([this](const Data& elem) {
@@ -34,18 +18,24 @@ SetVec<Data>::SetVec(MappableContainer<Data>&& Mcon) {
 }
 
 
+template <typename Data>
+SetVec<Data>::SetVec(const TraversableContainer<Data>& Tcon) {
+    Tcon.Traverse([this](const Data& elem) {
+        if (!Exists(elem)) {
+            Insert(elem);
+        }
+    });
+}
 
 
-//Copy constructor
 template <typename Data>
 SetVec<Data>::SetVec(const SetVec<Data>& other) {
     for (unsigned long i = 0; i < other.Size(); ++i) {
-        Insert(other[i]);  // Usa Insert per mantenere l'ordinamento e l'unicità
+        Insert(other[i]);  
     }
 }
 
 
-//Move costructor
 template <typename Data>
 SetVec<Data>::SetVec(SetVec<Data>&& Setvec) {
     elements = Setvec.elements;
@@ -55,31 +45,20 @@ SetVec<Data>::SetVec(SetVec<Data>&& Setvec) {
     
 }
 
-
-
-//Destructor
-/* ************************************************************************** */
-
+//destructor
 template <typename Data>
 SetVec<Data>::~SetVec() {
   Clear();  
 }
 
 
-
-//Constructor
-/* ************************************************************************** */
-
-//Copy
+//copy operator
 template <typename Data>
 SetVec<Data>& SetVec<Data>::operator=(const SetVec<Data>& other) {
-    if (this != &other) {  // Evita l'auto-assegnazione
-        // Pulisce il contenitore di destinazione
+    if (this != &other) {
         Clear();
-
-        // Copia gli elementi dal contenitore "other"
         for (unsigned long i = 0; i < other.Size(); ++i) {
-            Insert(other[i]);  // Usa Insert per mantenere l'ordinamento e evitare duplicati
+            Insert(other[i]);
         }
     }
     return *this;
@@ -87,16 +66,13 @@ SetVec<Data>& SetVec<Data>::operator=(const SetVec<Data>& other) {
 
 
 
-//Move
+//move operator
 template <typename Data>
 SetVec<Data>& SetVec<Data>::operator=(SetVec<Data>&& other) noexcept {
     if (this != &other) {  
-       
         Clear();
-
         elements = std::move(other.elements);  
         size = other.size;  
-
         other.Clear();  
     }
     return *this;
@@ -104,11 +80,7 @@ SetVec<Data>& SetVec<Data>::operator=(SetVec<Data>&& other) noexcept {
 
 
 
-
-// Comparison operators
-/* ************************************************************************** */
-
-//Operator ==
+//operator ==
 template <typename Data>
 bool SetVec<Data>::operator==(const SetVec<Data>& other) const noexcept {
     if (size != other.size) {
@@ -126,11 +98,7 @@ bool SetVec<Data>::operator==(const SetVec<Data>& other) const noexcept {
 
 
 
-
-
-
-
-//Operator !=
+//operator !=
 template <typename Data>
 bool SetVec<Data>::operator!=(const SetVec<Data>& other) const noexcept {
     return !(*this == other);
@@ -138,14 +106,7 @@ bool SetVec<Data>::operator!=(const SetVec<Data>& other) const noexcept {
 
 
 
-// Specific member functions (inherited from OrderedDictionaryContainer)
-/* ************************************************************************** */
-
-//Min
 /* ************************************************************************ */
-
-
-//Min
 template <typename Data>
 Data SetVec<Data>::Min() const {
     if (size == 0) {
@@ -155,7 +116,6 @@ Data SetVec<Data>::Min() const {
 }
 
 
-//MinNRemove
 template <typename Data>
 Data SetVec<Data>::MinNRemove() {
     Data val = Min();
@@ -164,8 +124,6 @@ Data SetVec<Data>::MinNRemove() {
 }
 
 
-
-//RemoveMin
 template <typename Data>
 void SetVec<Data>::RemoveMin() {
     if (size == 0) {
@@ -175,11 +133,8 @@ void SetVec<Data>::RemoveMin() {
 }
 
 
-//Max
+
 /* ************************************************************************ */
-
-
-//Max
 template <typename Data>
 Data SetVec<Data>::Max() const {
     if (size == 0) {
@@ -189,7 +144,6 @@ Data SetVec<Data>::Max() const {
 }
 
 
-//MaxNRemove
 template <typename Data>
 Data SetVec<Data>::MaxNRemove() {
     Data val = Max();
@@ -197,9 +151,6 @@ Data SetVec<Data>::MaxNRemove() {
     return val;
 }
 
-
-
-//RemoveMax
 template <typename Data>
 void SetVec<Data>::RemoveMax() {
     if (size == 0) {
@@ -208,218 +159,165 @@ void SetVec<Data>::RemoveMax() {
     Remove(elements[size - 1]);
 }
 
-
-//Predecessor
 /* ************************************************************************ */
-
-
 //Predecessor
 template <typename Data>
 Data SetVec<Data>::Predecessor(const Data& val) const {
-    if (size == 0) {
-        throw std::length_error("SetVec is empty");
+    if (size == 0) throw std::length_error("Empty container");
+
+    long idx = -1;
+    for (unsigned long i = 0; i < size && elements[i] < val; ++i) {
+        idx = i;
     }
 
-    long index = -1;
+    if (idx == -1) throw std::length_error("No predecessor");
 
-    for (unsigned long i = 0; i < size; ++i) {
-        if (elements[i] < val) {
-            index = i;  // Manteniamo l'ultimo più piccolo
-        } else {
-            break; // Siccome è ordinato, possiamo fermarci
-        }
-    }
-
-    if (index == -1) {
-        throw std::length_error("No predecessor found smaller than the given value");
-    }
-
-    return elements[index];
+    return elements[idx];
 }
 
 
 
-
-//PredecessorNRemove
+//predecessorNRemove
 template <typename Data>
 Data SetVec<Data>::PredecessorNRemove(const Data& val) {
-    if (size < 2) throw std::length_error("Not enough elements for a predecessor.");
+    if (size < 2) throw std::length_error("Too few elements");
 
-    unsigned long index = 0;
-    while (index < size && elements[index] < val) {
-        ++index;
-    }
+    unsigned long i = 0;
+    while (i < size && elements[i] < val) ++i;
 
-    if (index == 0)
-        throw std::length_error("No predecessor to remove (all elements are >= val).");
+    if (i == 0) throw std::length_error("No predecessor");
 
-    Data pred = elements[index - 1];
+    Data pred = elements[i - 1];
     Remove(pred);
     return pred;
 }
 
 
-
-
-
-//RemovePredecessor
+//removePredecessor
 template <typename Data>
 void SetVec<Data>::RemovePredecessor(const Data& val) {
-    if (size < 2) throw std::length_error("Not enough elements for a predecessor.");
+    if (size < 2) throw std::length_error("Too few elements");
 
-    unsigned long index = 0;
-    while (index < size && elements[index] < val) {
-        ++index;
-    }
+    unsigned long i = 0;
+    while (i < size && elements[i] < val) ++i;
 
-    if (index == 0)
-        throw std::length_error("No predecessor to remove (all elements are >= val).");
+    if (i == 0) throw std::length_error("No predecessor");
 
-    Remove(elements[index - 1]);
+    Remove(elements[i - 1]);
 }
 
 
-//Successor
 /* ************************************************************************ */
 
-//Successor
+//successor
 template <typename Data>
 Data SetVec<Data>::Successor(const Data& val) const {
-    if (size < 2) throw std::length_error("Not enough elements for a successor.");
+    if (size < 2) throw std::length_error("Too few elements");
 
-    ulong index = 0;
-    while (index < size && elements[index] <= val) {
-        ++index;
+    for (unsigned long i = 0; i < size; ++i) {
+        if (elements[i] > val) return elements[i];
     }
 
-    if (index == size)
-        throw std::length_error("No successor found (all elements are <= val).");
-
-    return elements[index];
+    throw std::length_error("No successor");
 }
 
 
 
-
-//SuccessorNRemove
+//successorNRemove
 template <typename Data>
-Data SetVec<Data>::SuccessorNRemove(const Data& val) {
-    Data successor = Successor(val);
+Data SetVec<Data>::SuccessorNRemove(const Data& value) {
+    Data successor = Successor(value);
     Remove(successor);
     return successor;
 }
 
 
 
-
-
-//RemoveSuccessor
+//removeSuccessor
 template <typename Data>
-void SetVec<Data>::RemoveSuccessor(const Data& val) {
-    Data successor=Successor(val);
+void SetVec<Data>::RemoveSuccessor(const Data& value) {
+    Data successor=Successor(value);
     Remove(successor);
 }
 
 
 
-
-
-// Specific member functions (inherited from DictionaryContainer)
 /* ************************************************************************ */
 
-//Insert Copy
+//insert con copy
 template <typename Data>
 bool SetVec<Data>::Insert(const Data& val) {
-    if (Exists(val)) {
-        return false;
+    if (Exists(val)) return false;
+
+    Resize(++size);
+
+    unsigned long i = 0;
+    while (i < size - 1 && elements[i] < val) ++i;
+
+    for (auto j = size - 1; j > i; --j) {
+        elements[j] = std::move(elements[j - 1]);
     }
 
-    Resize(size + 1); // aumenta lo spazio
-
-    // Trova posizione dove inserire (in ordine crescente)
-    unsigned long pos = 0;
-    while (pos < size - 1 && elements[pos] < val) {
-        ++pos;
-    }
-
-    // Sposta gli elementi a destra
-    for (ulong i = size - 1; i > pos; --i) {
-        elements[i] = std::move(elements[i - 1]);
-    }
-
-    elements[pos] = val;
+    elements[i] = val;
     return true;
 }
+
 
   
-//Insert Move
+//insert con move
 template <typename Data>
 bool SetVec<Data>::Insert(Data&& val) {
-    if (Exists(val)) {
-        return false;  // Se l'elemento esiste, non fare nulla
+    if (Exists(val)) return false;
+
+    Resize(++size);
+
+    unsigned long i = 0;
+    while (i < size - 1 && elements[i] < val) ++i;
+
+    for (unsigned long j = size - 1; j > i; --j) {
+        elements[j] = std::move(elements[j - 1]);
     }
 
-    Resize(size + 1);  // Aumenta lo spazio per l'elemento
-
-    // Trova la posizione giusta per mantenere l'ordinamento
-    unsigned long pos = 0;
-    while (pos < size - 1 && elements[pos] < val) {
-        ++pos;
-    }
-
-    // Sposta gli elementi a destra
-    for (unsigned long i = size - 1; i > pos; --i) {
-        elements[i] = std::move(elements[i - 1]);
-    }
-
-    elements[pos] = std::move(val);  // Muove l'elemento al posto giusto
+    elements[i] = std::move(val);
     return true;
 }
 
 
 
-//Remove
+//remove
 template <typename Data>
 bool SetVec<Data>::Remove(const Data& val) {
-    for (unsigned long i = 0; i < size; ++i) {
-        if (elements[i] == val) {
-            for (unsigned long j = i; j < size - 1; ++j) {
-                elements[j] = std::move(elements[j + 1]);
-            }
-            Resize(size - 1);
-            return true;
-        }
+    unsigned long i = 0;
+    while (i < size && elements[i] != val) ++i;
+
+    if (i == size) return false;
+
+    for (; i < size - 1; ++i) {
+        elements[i] = std::move(elements[i + 1]);
     }
-    return false;
+
+    Resize(size - 1);
+    return true;
 }
 
 
 
-
-
-
-
-// Specific member functions (inherited from LinearContainer)
 /* ************************************************************************ */
 
-// Operator[] const
+//operator []
 template <typename Data>
 const Data& SetVec<Data>::operator[](unsigned long index) const {
-    // Verifica se l'indice è fuori dai limiti
     if (index >= size) {
         throw std::out_of_range("Index out of range");
     }
-
-    // Restituisce il dato al dato indice
     return elements[index];
 }
 
 
 
-// Specific member function (inherited from TestableContainer)
 /* ************************************************************************** */
 
-//Exists
+//exists
 template <typename Data>
 bool SetVec<Data>::Exists(const Data& val) const noexcept {
     for (unsigned long i = 0; i < size; ++i) {
@@ -431,11 +329,9 @@ bool SetVec<Data>::Exists(const Data& val) const noexcept {
 }
 
 
-
- // Specific member function (inherited from ClearableContainer)
 /* ************************************************************************ */
 
- //Clear
+//clear
 template <typename Data>
 void SetVec<Data>::Clear() {
     elements.Clear();
@@ -448,6 +344,7 @@ void SetVec<Data>::Clear() {
 //Auxilary function
 /* ************************************************************************** */
 
+//FindIndexHelper
 template <typename Data>
 long SetVec<Data>::FindIndexHelper(const Data& val) const {
     for (unsigned long i = 0; i < size; ++i) {
@@ -462,8 +359,6 @@ long SetVec<Data>::FindIndexHelper(const Data& val) const {
 template <typename Data>
 long SetVec<Data>::FindIndex(const Data& val) const {
     long index = FindIndexHelper(val);
-    // Se vuoi lanciare un'eccezione invece di restituire -1:
-    // if (index == -1) throw std::length_error("Elemento non trovato");
     return index;
 }
 

@@ -17,17 +17,15 @@ template <typename Data>
 class Set : virtual public OrderedDictionaryContainer<Data>,
             virtual public LinearContainer<Data>,
             virtual public ClearableContainer {
-  // Must extend OrderedDictionaryContainer<Data>,
-  //             LinearContainer<Data>,
-  //             ClearableContainer
+
 
 private:
 
-  // ...
+ 
 
 protected:
 
-  // ...
+ 
 
 public:
 
@@ -37,10 +35,10 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  Set &operator=(const Set&) noexcept = delete; // Copy assignment of abstract types is not possible.
+  Set& operator=(const Set&) noexcept = delete; // Copy assignment of abstract types is not possible.
 
   // Move assignment
-  Set &operator=( Set&&) noexcept = delete; // Move assignment of abstract types is not possible.
+  Set& operator=(Set&&) noexcept = delete; // Move assignment of abstract types is not possible.
 
 };
 

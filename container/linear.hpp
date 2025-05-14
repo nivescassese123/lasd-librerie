@@ -2,13 +2,12 @@
 #ifndef LINEAR_HPP
 #define LINEAR_HPP
 
-/* ************************************************************************** */
 
 #include "mappable.hpp"
 #include <algorithm>
 #include <climits>
 #include <random>
-/* ************************************************************************** */
+
 
 namespace lasd {
 
@@ -17,12 +16,11 @@ namespace lasd {
 template <typename Data>
 class LinearContainer : virtual public PreOrderTraversableContainer<Data>,
                         virtual public PostOrderTraversableContainer<Data> {
-  // Must extend PreOrderTraversableContainer<Data>,
-  //             PostOrderTraversableContainer<Data>
+ 
 
 private:
 
-  // ...
+
 
 protected:
 
@@ -36,26 +34,26 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  LinearContainer &operator=(const LinearContainer &) = delete; // Copy assignment of abstract types is not possible.
+  LinearContainer &operator=(const LinearContainer &) = delete; 
 
   // Move assignment
-  LinearContainer &operator=(LinearContainer &&) noexcept = delete; // Move assignment of abstract types is not possible.
+  LinearContainer &operator=(LinearContainer &&) noexcept = delete; 
 
   /* ************************************************************************ */
 
   // Comparison operators
-  inline bool operator==(const LinearContainer &) const noexcept; // Comparison of abstract types is possible.
-  inline bool operator!=(const LinearContainer &) const noexcept; // Comparison of abstract types is possible.
+  inline bool operator==(const LinearContainer &) const noexcept; 
+  inline bool operator!=(const LinearContainer &) const noexcept; 
 
   /* ************************************************************************ */
 
   // Specific member functions
 
-  virtual const Data &operator[](unsigned long) const = 0; // (non-mutable version; concrete function must throw std::out_of_range when out of range)
+  virtual const Data &operator[](unsigned long) const = 0;
 
-  virtual inline  const Data &Front() const; // (non-mutable version; concrete function must throw std::length_error when empty)
+  virtual inline  const Data &Front() const; 
 
-  virtual inline const Data &Back() const; // (non-mutable version; concrete function must throw std::length_error when empty)
+  virtual inline const Data &Back() const; 
 
   /* ************************************************************************ */
 
@@ -63,19 +61,18 @@ public:
 
   using typename TraversableContainer<Data>::TraverseFun;
 
-  inline void Traverse(TraverseFun) const override; // Override TraversableContainer member
+  inline void Traverse(TraverseFun) const override; 
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PreOrderTraversableContainer)
 
-  inline void PreOrderTraverse(TraverseFun) const override; // Override PreOrderTraversableContainer member
-
+  inline void PreOrderTraverse(TraverseFun) const override; 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderTraversableContainer)
 
-  inline void PostOrderTraverse(TraverseFun) const override; // Override PostOrderTraversableContainer member
+  inline void PostOrderTraverse(TraverseFun) const override; 
 
 };
 
@@ -85,13 +82,10 @@ template <typename Data>
 class MutableLinearContainer : virtual public LinearContainer<Data>,
                                virtual public PreOrderMappableContainer<Data>,
                                virtual public PostOrderMappableContainer<Data> { 
-  // Must extend LinearContainer<Data>,
-  //             PreOrderMappableContainer<Data>,
-  //             PostOrderMappableContainer<Data>
+
 
 private:
 
-  // ...
 
 protected:
 
@@ -105,10 +99,10 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  MutableLinearContainer &operator=(const MutableLinearContainer &) = delete; // Copy assignment of abstract types is not possible.
+  MutableLinearContainer &operator=(const MutableLinearContainer &) = delete; 
 
   // Move assignment
-  MutableLinearContainer &operator=(MutableLinearContainer &&) noexcept = delete; // Move assignment of abstract types is not possible.
+  MutableLinearContainer &operator=(MutableLinearContainer &&) noexcept = delete; 
 
   /* ************************************************************************ */
 
@@ -132,23 +126,22 @@ public:
 
   // Specific member function (inherited from PreOrderMappableContainer)
 
-  void PreOrderMap(MapFun) override; // Override PreOrderMappableContainer member
+  void PreOrderMap(MapFun) override;
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from PostOrderMappableContainer)
 
-  void PostOrderMap(MapFun) override; // Override PostOrderMappableContainer member
+  void PostOrderMap(MapFun) override; 
 
 };
 
 template <typename Data>
 class SortableLinearContainer : virtual public MutableLinearContainer<Data> {
-  // Must extend MutableLinearContainer<Data>
+  
 
 private:
 
-  // ...
 
 protected:
 
@@ -171,7 +164,7 @@ public:
 
    inline void Sort() noexcept {
     quickSort(0, size - 1);
-  }; // (concrete function must throw std::length_error when empty)
+  }; 
   
 
 protected:
