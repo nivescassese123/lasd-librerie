@@ -92,21 +92,21 @@ public:
 
   // Specific member functions
 
-    virtual Data Min() const =  0; // (concrete function must throw std::length_error when empty)
-    virtual Data MinNRemove() = 0; // (concrete function must throw std::length_error when empty)
-    virtual void RemoveMin() = 0; // (concrete function must throw std::length_error when empty)
+    virtual Data Min() const =  0; 
+    virtual Data MinNRemove() = 0; 
+    virtual void RemoveMin() = 0; 
 
-    virtual Data Max()const =  0; // (concrete function must throw std::length_error when empty)
-    virtual Data MaxNRemove() = 0;// (concrete function must throw std::length_error when empty)
-    virtual void RemoveMax() = 0; // (concrete function must throw std::length_error when empty)
+    virtual Data Max()const =  0;
+    virtual Data MaxNRemove() = 0;
+    virtual void RemoveMax() = 0; 
 
-    virtual Data Predecessor(const Data&)const = 0; // (concrete function must throw std::length_error when not found)
-    virtual Data PredecessorNRemove(const Data&) = 0; // (concrete function must throw std::length_error when not found)
-    virtual void RemovePredecessor(const Data&) = 0; // (concrete function must throw std::length_error when not found)
+    virtual Data Predecessor(const Data&)const = 0;   
+    virtual Data PredecessorNRemove(const Data&) = 0; 
+    virtual void RemovePredecessor(const Data&) = 0;  
 
-    virtual Data Successor(const Data&)const = 0; // (concrete function must throw std::length_error when not found)
-    virtual Data SuccessorNRemove(const Data&) = 0; // (concrete function must throw std::length_error when not found)
-    virtual void RemoveSuccessor(const Data&) = 0; // (concrete function must throw std::length_error when not found)
+    virtual Data Successor(const Data&)const = 0; 
+    virtual Data SuccessorNRemove(const Data&) = 0; 
+    virtual void RemoveSuccessor(const Data&) = 0;  
 
 /* ************************************************************************** */  
 

@@ -108,11 +108,11 @@ public:
 
   // Specific member functions
 
-  virtual inline Data &operator[](unsigned long) = 0; // (mutable version; concrete function must throw std::out_of_range when out of range)
+  virtual inline Data &operator[](unsigned long) = 0;     
 
-  virtual Data &Front(); // (mutable version; concrete function must throw std::length_error when empty)
+  virtual Data &Front();  
 
-  virtual Data &Back(); // (mutable version; concrete function must throw std::length_error when empty)
+  virtual Data &Back(); 
 
   /* ************************************************************************ */
 

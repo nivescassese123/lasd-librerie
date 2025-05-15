@@ -21,14 +21,14 @@ namespace lasd {
   
 
   template <typename Data>
-  inline bool List<Data>::Node::operator==(const Node &other) const noexcept {
-    return element == other.element;
+  inline bool List<Data>::Node::operator==(const Node &var) const noexcept {
+    return element == var.element;
   }
   
   
   template <typename Data>
-  inline bool List<Data>::Node::operator!=(const Node &other) const noexcept {
-    return !((*this) == other);
+  inline bool List<Data>::Node::operator!=(const Node &var) const noexcept {
+    return !((*this) == var);
   }
   
 

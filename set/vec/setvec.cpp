@@ -45,14 +45,14 @@ SetVec<Data>::SetVec(SetVec<Data>&& Setvec) {
     
 }
 
-//destructor
+
 template <typename Data>
 SetVec<Data>::~SetVec() {
   Clear();  
 }
 
 
-//copy operator
+
 template <typename Data>
 SetVec<Data>& SetVec<Data>::operator=(const SetVec<Data>& other) {
     if (this != &other) {
@@ -66,7 +66,7 @@ SetVec<Data>& SetVec<Data>::operator=(const SetVec<Data>& other) {
 
 
 
-//move operator
+
 template <typename Data>
 SetVec<Data>& SetVec<Data>::operator=(SetVec<Data>&& other) noexcept {
     if (this != &other) {  
@@ -80,7 +80,7 @@ SetVec<Data>& SetVec<Data>::operator=(SetVec<Data>&& other) noexcept {
 
 
 
-//operator ==
+
 template <typename Data>
 bool SetVec<Data>::operator==(const SetVec<Data>& other) const noexcept {
     if (size != other.size) {
@@ -98,7 +98,7 @@ bool SetVec<Data>::operator==(const SetVec<Data>& other) const noexcept {
 
 
 
-//operator !=
+
 template <typename Data>
 bool SetVec<Data>::operator!=(const SetVec<Data>& other) const noexcept {
     return !(*this == other);
@@ -160,7 +160,7 @@ void SetVec<Data>::RemoveMax() {
 }
 
 /* ************************************************************************ */
-//Predecessor
+
 template <typename Data>
 Data SetVec<Data>::Predecessor(const Data& val) const {
     if (size == 0) throw std::length_error("Empty container");
@@ -177,7 +177,7 @@ Data SetVec<Data>::Predecessor(const Data& val) const {
 
 
 
-//predecessorNRemove
+
 template <typename Data>
 Data SetVec<Data>::PredecessorNRemove(const Data& val) {
     if (size < 2) throw std::length_error("Too few elements");
@@ -193,7 +193,6 @@ Data SetVec<Data>::PredecessorNRemove(const Data& val) {
 }
 
 
-//removePredecessor
 template <typename Data>
 void SetVec<Data>::RemovePredecessor(const Data& val) {
     if (size < 2) throw std::length_error("Too few elements");
@@ -209,7 +208,7 @@ void SetVec<Data>::RemovePredecessor(const Data& val) {
 
 /* ************************************************************************ */
 
-//successor
+
 template <typename Data>
 Data SetVec<Data>::Successor(const Data& val) const {
     if (size < 2) throw std::length_error("Too few elements");
@@ -223,7 +222,7 @@ Data SetVec<Data>::Successor(const Data& val) const {
 
 
 
-//successorNRemove
+
 template <typename Data>
 Data SetVec<Data>::SuccessorNRemove(const Data& value) {
     Data successor = Successor(value);
@@ -233,7 +232,7 @@ Data SetVec<Data>::SuccessorNRemove(const Data& value) {
 
 
 
-//removeSuccessor
+
 template <typename Data>
 void SetVec<Data>::RemoveSuccessor(const Data& value) {
     Data successor=Successor(value);
@@ -244,7 +243,7 @@ void SetVec<Data>::RemoveSuccessor(const Data& value) {
 
 /* ************************************************************************ */
 
-//insert con copy
+
 template <typename Data>
 bool SetVec<Data>::Insert(const Data& val) {
     if (Exists(val)) return false;
@@ -263,8 +262,7 @@ bool SetVec<Data>::Insert(const Data& val) {
 }
 
 
-  
-//insert con move
+
 template <typename Data>
 bool SetVec<Data>::Insert(Data&& val) {
     if (Exists(val)) return false;
@@ -284,7 +282,7 @@ bool SetVec<Data>::Insert(Data&& val) {
 
 
 
-//remove
+
 template <typename Data>
 bool SetVec<Data>::Remove(const Data& val) {
     unsigned long i = 0;
@@ -304,7 +302,7 @@ bool SetVec<Data>::Remove(const Data& val) {
 
 /* ************************************************************************ */
 
-//operator []
+
 template <typename Data>
 const Data& SetVec<Data>::operator[](unsigned long index) const {
     if (index >= size) {
@@ -317,7 +315,7 @@ const Data& SetVec<Data>::operator[](unsigned long index) const {
 
 /* ************************************************************************** */
 
-//exists
+
 template <typename Data>
 bool SetVec<Data>::Exists(const Data& val) const noexcept {
     for (unsigned long i = 0; i < size; ++i) {
@@ -331,7 +329,7 @@ bool SetVec<Data>::Exists(const Data& val) const noexcept {
 
 /* ************************************************************************ */
 
-//clear
+
 template <typename Data>
 void SetVec<Data>::Clear() {
     elements.Clear();

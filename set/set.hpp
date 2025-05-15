@@ -35,10 +35,10 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  Set& operator=(const Set&) noexcept = delete; // Copy assignment of abstract types is not possible.
+  Set& operator=(const Set&) noexcept = delete; 
 
   // Move assignment
-  Set& operator=(Set&&) noexcept = delete; // Move assignment of abstract types is not possible.
+  Set& operator=(Set&&) noexcept = delete; 
 
 };
 

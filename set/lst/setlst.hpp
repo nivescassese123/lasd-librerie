@@ -39,18 +39,24 @@ public:
   /* ************************************************************************ */
 
   // Specific constructors
-    SetLst(const TraversableContainer<Data>&);// A set obtained from a TraversableContainer
-    SetLst(MappableContainer<Data>&&); // A set obtained from a MappableContainer
+    SetLst(const TraversableContainer<Data>&);  
+    SetLst(MappableContainer<Data>&&);  
 
   /* ************************************************************************ */
 
   // Copy constructor
-    SetLst(const SetLst<Data>& val) : List<Data>(val) {}
+    SetLst(const SetLst<Data>& val) : 
+    List<Data>(val) {
+
+    }
 
 
   // Move constructor
 
-    SetLst(SetLst<Data>&& val) noexcept : List<Data>(std::move(val)) {}
+    SetLst(SetLst<Data>&& val) noexcept :
+     List<Data>(std::move(val)) {
+
+     }
 
     
 
@@ -76,51 +82,51 @@ public:
 
   // Specific member functions (inherited from OrderedDictionaryContainer)
 
-    Data Min() const override; // Override OrderedDictionaryContainer member (concrete function must throw std::length_error when empty)
-    Data MinNRemove() override; // Override OrderedDictionaryContainer member (concrete function must throw std::length_error when empty)
-    void RemoveMin() override; // Override OrderedDictionaryContainer member (concrete function must throw std::length_error when empty)
+    Data Min() const override;    
+    Data MinNRemove() override;   
+    void RemoveMin() override;  
 
-    Data Max() const override; // Override OrderedDictionaryContainer member (concrete function must throw std::length_error when empty)
-    Data MaxNRemove() override; // Override OrderedDictionaryContainer member (concrete function must throw std::length_error when empty)
-    void RemoveMax() override; // Override OrderedDictionaryContainer member (concrete function must throw std::length_error when empty)
+    Data Max() const override;  
+    Data MaxNRemove() override;   
+    void RemoveMax() override;  
 
-    Data Predecessor(const Data&) const; // Override OrderedDictionaryContainer member (concrete function must throw std::length_error when not found)
-    Data PredecessorNRemove(const Data&); // Override OrderedDictionaryContainer member (concrete function must throw std::length_error when not found)
-    void RemovePredecessor(const Data&); // Override OrderedDictionaryContainer member (concrete function must throw std::length_error when not found)
+    Data Predecessor(const Data&) const;  
+    Data PredecessorNRemove(const Data&);   
+    void RemovePredecessor(const Data&);  
 
-    Data Successor(const Data&) const override; // Override OrderedDictionaryContainer member (concrete function must throw std::length_error when not found)
-    Data SuccessorNRemove(const Data&) override; // Override OrderedDictionaryContainer member (concrete function must throw std::length_error when not found)
-    void RemoveSuccessor(const Data&) override;  // Override OrderedDictionaryContainer member (concrete function must throw std::length_error when not found)
+    Data Successor(const Data&) const override;   
+    Data SuccessorNRemove(const Data&) override;  
+    void RemoveSuccessor(const Data&) override;   
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from DictionaryContainer)
 
-    bool Insert(const Data&) override; // Override DictionaryContainer member (copy of the value)
-    bool Insert(Data&&) override; // Override DictionaryContainer member (move of the value)
-    bool Remove(const Data&) override; // Override DictionaryContainer member
+    bool Insert(const Data&) override;  
+    bool Insert(Data&&) override;   
+    bool Remove(const Data&) override;  
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from LinearContainer)
 
-    const Data& operator[](const unsigned long index) const override; // Override LinearContainer member (must throw std::out_of_range when out of range)
+    const Data& operator[](const unsigned long index) const override;   
 
   /* ************************************************************************** */
 
   // Specific member function (inherited from TestableContainer)
 
-    bool Exists(const Data&) const noexcept override;// Override TestableContainer member
+    bool Exists(const Data&) const noexcept override; 
 
   /* ************************************************************************ */
 
   // Specific member function (inherited from ClearableContainer)
 
-  void Clear() noexcept override;// Override ClearableContainer member
+  void Clear() noexcept override;
 
 protected:
 
-  // Auxiliary functions, if necessary!
+  
 
 };
 

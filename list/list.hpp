@@ -36,13 +36,21 @@ protected:
       inline Node() = default;
 
     // Specific constructors
-      inline Node(const Data &dat) : element(dat){};
+    //dichiarazione e implementazione 
+      inline Node(const Data &dat) :
+       element(dat) {
+
+       };
+
       inline Node(Data&&) noexcept;
 
     /* ********************************************************************** */
 
     // Copy constructor
-      inline Node(const Node &nod) : element(nod.element) {};
+      inline Node(const Node &nod) : 
+      element(nod.element) {
+
+      };
 
     // Move constructor
       inline Node(Node &&) noexcept ;
@@ -55,9 +63,9 @@ protected:
     /* ********************************************************************** */
 
     // Comparison operators
-      inline bool operator==(const Node &other) const noexcept; 
+      inline bool operator==(const Node &) const noexcept; 
 
-      inline bool operator!=(const Node &other) const noexcept; 
+      inline bool operator!=(const Node &) const noexcept; 
 
     /* ********************************************************************** */
 
@@ -113,36 +121,36 @@ public:
   // Specific member functions
 
   //Front
-    void InsertAtFront(const Data&); // Copy of the value
-    void InsertAtFront(Data&&); // Move of the value
-    void RemoveFromFront(); // (must throw std::length_error when empty)
-    Data FrontNRemove(); // (must throw std::length_error when empty)
+    void InsertAtFront(const Data&); 
+    void InsertAtFront(Data&&);   
+    void RemoveFromFront();   
+    Data FrontNRemove();  
 
   //Back
-    void InsertAtBack(const Data&); // Copy of the value
-    void InsertAtBack(Data&&); // Move of the value
-    void RemoveFromBack(); // (must throw std::length_error when empty)
-    Data BackNRemove() ; // (must throw std::length_error when empty)
+    void InsertAtBack(const Data&);   
+    void InsertAtBack(Data&&);  
+    void RemoveFromBack();  
+    Data BackNRemove() ;  
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from MutableLinearContainer)
 
-    Data &operator[](const unsigned long) override; // Override MutableLinearContainer member (must throw std::out_of_range when out of range)
+    Data &operator[](const unsigned long) override;    
 
-    Data &Front() override; // Override MutableLinearContainer member (must throw std::length_error when empty)
+    Data &Front() override;     
 
-    Data &Back() override;  // Override MutableLinearContainer member (must throw std::length_error when empty)
+    Data &Back() override;  
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from LinearContainer)
 
-    const Data &operator[](const unsigned long) const override; // Override LinearContainer member (must throw std::out_of_range when out of range)
+    const Data &operator[](const unsigned long) const override;   
 
-    const Data &Front() const override; // Override LinearContainer member (must throw std::length_error when empty)
+    const Data &Front() const override;   
 
-    const Data &Back() const override;  // Override LinearContainer member (must throw std::length_error when empty)
+    const Data &Back() const override;   
 
   /* ************************************************************************ */
 
