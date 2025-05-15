@@ -105,7 +105,7 @@ namespace lasd {
   //Mutable Operator[]
   template <typename Data>
   inline Data &Vector<Data>::operator[](unsigned long i) {
-    if (i > size) {
+    if (i >= size) {
       throw std::out_of_range("This Vector has not that many elements");
     }
     return elements[i];
@@ -137,7 +137,7 @@ namespace lasd {
   //Linear Operator[]
   template <typename Data>
   inline const Data &Vector<Data>::operator[](unsigned long i) const {
-    if (i > size) {
+    if (i >= size) {
       throw std::out_of_range("This Vector has not that many elements");
     }
     return elements[i];
