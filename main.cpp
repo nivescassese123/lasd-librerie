@@ -1,4 +1,5 @@
 
+
 #include "zlasdtest/test.hpp"
 
 #include "zmytest/test.hpp"
@@ -10,36 +11,32 @@
 /* ************************************************************************** */
 
 int main() {
-  /*std::cout << "LASD Libraries 2025" << std::endl;
-  lasdtest();
-  mytest(); // include my test function here
-  return 0;
-
-  */
- std::cout << "LASD Libraries 2025\n";
-  std::cout << "Scegli quale test eseguire:\n";
-  std::cout << "1) Test professore\n";
-  std::cout << "2) Test personali\n";
-  std::cout << "3) Entrambi\n";
-  std::cout << "Scelta: ";
-
-  int scelta = 0;
-  std::cin >> scelta;
-
-  switch(scelta) {
-    case 1:
-      lasdtest();
-      break;
-    case 2:
-      mytest();
-      break;
-    case 3:
-      lasdtest();
-      mytest();
-      break;
-    default:
-      std::cout << "Scelta non valida.\n";
-  }
-
+  std::cout << "Lasd Libraries 2023" << std::endl;
+  
+  int scelta;
+  
+  do {
+    std::cout << "\nScegli l'operazione da eseguire:" << std::endl;
+    std::cout << "1. Esegui i test standard (del professore)" << std::endl;
+    std::cout << "2. Esegui i miei test personalizzati" << std::endl;
+    std::cout << "0. Esci" << std::endl;
+    std::cout << "Scelta: ";
+    std::cin >> scelta;
+    
+    switch(scelta) {
+      case 1:
+        lasdtest();  // Funzione definita in zlasdtest/test.hpp
+        break;
+      case 2:
+        mytest();  // Funzione definita in zmytest/test.hpp
+        break;
+      case 0:
+        std::cout << "Arrivederci!" << std::endl;
+        break;
+      default:
+        std::cout << "Scelta non valida" << std::endl;
+    }
+  } while(scelta != 0);
+  
   return 0;
 }
