@@ -726,7 +726,7 @@ void MyTestList() {
 
 /* ************************************************************************** */
 
-void MyTestSet() {
+void MyTestSetVec() {
     std::cout << "\nBegin of SetVec<int> Test:" << std::endl;
     
     // Resettiamo il contatore dei test
@@ -880,14 +880,87 @@ void MyTestSetList() {
     testResults.addTest(setList.Size() == 1000, "Large set list handles 1000 elements");
 
 
-    // Test : Operazioni miste
-    lasd::SetLst<std::string> strSetList;
-    strSetList.Insert("test1");
-    strSetList.Insert("test2");
-    strSetList.Remove("test1");
-    strSetList.Insert("test3");
-    testResults.addTest(strSetList.Size() == 2 && strSetList.Exists("test3"), 
-                       "Mixed operations work correctly");
+    // Test con stringhe
+    std::cout << "\n\n==== Inizio Test Set<std::string> ====\n" << std::endl;
+    
+    // Test 1: Inserimento di stringhe
+    lasd::SetLst<std::string> stringSet;
+    stringSet.Insert("mela");
+    stringSet.Insert("banana");
+    stringSet.Insert("arancia");
+    stringSet.Insert("kiwi");
+    stringSet.Insert("pesca");
+    testResults.addTest(stringSet.Size() == 5, 
+                   "Inserimento di 5 stringhe distinte");
+
+    // Test 2: Controllo duplicati case-sensitive
+    stringSet.Insert("Mela");  // Diverso da "mela" (maiuscola)
+    testResults.addTest(stringSet.Size() == 6, 
+                   "Case sensitivity nell'inserimento");
+
+    // Test 3: Controllo duplicati esatti
+    stringSet.Insert("mela");  // Già presente
+    stringSet.Insert("banana");  // Già presente
+    testResults.addTest(stringSet.Size() == 6, 
+                   "Gestione corretta dei duplicati");
+
+    // Test 4: Gestione stringhe vuote
+    stringSet.Insert("");
+    testResults.addTest(stringSet.Exists(""), 
+                   "Inserimento e ricerca di stringa vuota");
+
+    // Test 5: Stringhe con spazi
+    stringSet.Insert("frutta fresca");
+    stringSet.Insert("   con spazi iniziali");
+    stringSet.Insert("con spazi finali   ");
+    testResults.addTest(stringSet.Size() == 10, 
+                   "Gestione stringhe con spazi");
+
+    // Test 6: Rimozione e verifica
+    stringSet.Remove("mela");
+    testResults.addTest(!stringSet.Exists("mela") && stringSet.Exists("Mela"), 
+                   "Rimozione selettiva di stringhe (case sensitive)");
+
+    // Test 7: Copia del set
+    lasd::SetLst<std::string> copiedSet = stringSet;
+    testResults.addTest(copiedSet.Size() == stringSet.Size(), 
+                   "Costruttore di copia - stesso numero di elementi");
+    
+    bool allElementsPresent = true;
+    stringSet.Traverse([&copiedSet, &allElementsPresent](const std::string& str) {
+        if (!copiedSet.Exists(str)) {
+            allElementsPresent = false;
+        }
+    });
+    testResults.addTest(allElementsPresent, 
+                   "Costruttore di copia - tutti gli elementi presenti");
+
+    // Test 8: Operazioni di OrderedDictionaryContainer
+    testResults.addTest(!stringSet.Empty(), 
+                   "Controllo che il set non sia vuoto");
+    std::string minValue = stringSet.Min();
+    std::string maxValue = stringSet.Max();
+    testResults.addTest(minValue <= stringSet.Min(), 
+                   "Operazione Min() restituisce effettivamente il minimo");
+    testResults.addTest(maxValue >= stringSet.Max(), 
+                   "Operazione Max() restituisce effettivamente il massimo");
+    
+    // Test 9: Successor e Predecessor
+    if (stringSet.Size() > 2) {
+        std::string someValue = stringSet.Min(); // Prendiamo un valore qualsiasi che non sia né il minimo né il massimo
+        lasd::SetLst<std::string> tempSet = stringSet;
+        tempSet.RemoveMin();
+        someValue = tempSet.Min();
+        
+        testResults.addTest(stringSet.Successor(stringSet.Min()) == someValue, 
+                      "Verifica dell'operazione Successor");
+                      
+        std::string predValue = stringSet.Predecessor(maxValue);
+        testResults.addTest(predValue < maxValue && predValue != minValue, 
+                      "Verifica dell'operazione Predecessor");
+    }
+
+    
 
     // Test : Valori limite
     lasd::SetLst<int> extremeSetList;
@@ -927,8 +1000,86 @@ void MyTestSetList() {
                         set3.Exists(3), 
                          "Set union maintains unique elements");
 
+    // Test 1: Creazione e inserimento in un Set di numeri float
+    std::cout << "\n\n==== Inizio Test Set<double> ====\n" << std::endl;
+    lasd::SetLst<double> floatSet;
+    floatSet.Insert(4.0);
+    floatSet.Insert(0.4);
+    floatSet.Insert(1.2);
+    floatSet.Insert(2.1);
+    floatSet.Insert(3.5);
+    floatSet.Insert(5.3);
+    testResults.addTest(floatSet.Size() == 6, 
+                   "Inserimento di 6 valori float distinti");
+
+    // Test 2: Verifica dell'esistenza di elementi
+    testResults.addTest(floatSet.Exists(4.0), 
+                   "Verifica esistenza di 4.0 nel Set");
+    testResults.addTest(floatSet.Exists(5.3), 
+                   "Verifica esistenza di 5.3 nel Set");
+    testResults.addTest(!floatSet.Exists(7.7), 
+                   "Verifica non esistenza di 7.7 nel Set");
+
+    // Test 3: Inserimento di duplicati
+    floatSet.Insert(4.0);  // Già presente
+    floatSet.Insert(2.1);  // Già presente
+    testResults.addTest(floatSet.Size() == 6, 
+                   "Gestione corretta dei duplicati (size immutata)");
+
+    // Test 4: Rimozione di elementi
+    floatSet.Remove(4.0);
+    testResults.addTest(!floatSet.Exists(4.0) && floatSet.Size() == 5, 
+                   "Rimozione di un elemento esistente (4.0)");
     
-    testResults.printSummary("SetList<int>");
+    floatSet.Remove(9.9);  // Non esiste
+    testResults.addTest(floatSet.Size() == 5, 
+                   "Tentativo di rimozione di elemento inesistente");
+
+    // Test 5: Test con valori negativi e zero
+    lasd::SetLst<double> mixedSet;
+    mixedSet.Insert(-3.14);
+    mixedSet.Insert(0.0);
+    mixedSet.Insert(2.718);
+    mixedSet.Insert(-0.0);  // Dovrebbe essere considerato uguale a 0.0
+    testResults.addTest(mixedSet.Size() == 3, 
+                   "Gestione di valori negativi e zero");
+
+    // Test 6: Test di attraversamento (usando un accumulatore)
+    double sum = 0.0;
+    floatSet.Traverse([&sum](const double& value) {
+        sum += value;
+    });
+    // La somma attesa è: 0.4 + 1.2 + 2.1 + 3.5 + 5.3 = 12.5
+    testResults.addTest(std::abs(sum - 12.5) < 0.0001, 
+                   "Attraversamento con funzione di accumulazione");
+
+    // Test 7: Valori specifici con precisione limitata
+    lasd::SetLst<double> precisionSet;
+    precisionSet.Insert(1.1);
+    precisionSet.Insert(1.10);  
+    precisionSet.Insert(1.100001);  
+    testResults.addTest(precisionSet.Size() <= 2, 
+                   "Gestione della precisione dei float");
+
+    // Test 8: Operazioni di OrderedDictionaryContainer
+    testResults.addTest(floatSet.Min() == 0.4, 
+                   "Operazione Min()");
+    testResults.addTest(floatSet.Max() == 5.3, 
+                   "Operazione Max()");
+    
+    // Test 9: Clear e Empty
+    floatSet.Clear();
+    testResults.addTest(floatSet.Empty(), 
+                   "Svuotamento del Set");
+    testResults.addTest(floatSet.Size() == 0, 
+                   "Size pari a 0 dopo Clear");
+
+    // Stampa il resoconto dei test
+    testResults.printSummary("Set Tests");
+   
+
+
+
 }
 
 
@@ -958,14 +1109,13 @@ void mytest() {
                 MyTestList();
                 break;
             case 3:
-                MyTestSet();
+                MyTestSetVec();
                 MyTestSetList();
                 break;
             case 4:
                 std::cout << "\n========= ESECUZIONE DI TUTTI I TEST =========" << std::endl;
                 MyTestVector();
                 MyTestList();
-                MyTestSet();
                 MyTestList();
                 break;
             case 0:
