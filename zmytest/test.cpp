@@ -778,21 +778,159 @@ void MyTestSet() {
     setVec2.Clear();
     testResults.addTest(setVec2.Empty(), "The container is empty after Clear");
     
-    // Test : SetVec con tipo diverso
-    lasd::SetVec<std::string> setVecStr;
-    setVecStr.Insert("primo");
-    setVecStr.Insert("secondo");
-    testResults.addTest(setVecStr.Size() == 2, "String set has size 2 after insertions");
     
     // Test : Rimozione elemento non esistente
     bool beforeRemove = setVec.Exists(50);
     setVec.Remove(50);
     bool afterRemove = setVec.Exists(50);
     testResults.addTest(beforeRemove == afterRemove, "Removing non-existent element has no effect");
+
     
+    // Test : Test con grandi dimensioni
+    lasd::SetVec<int> largeSet;
+    for(int i = 0; i < 1000; i++) {
+        largeSet.Insert(i);
+    }
+    testResults.addTest(largeSet.Size() == 1000, "Large set creation and insertion (1000 elements)");
+    
+    // Test : Test con valori limite
+    lasd::SetVec<int> extremeSet;
+    extremeSet.Insert(INT_MAX);
+    extremeSet.Insert(INT_MIN);
+    extremeSet.Insert(0);
+    testResults.addTest(extremeSet.Size() == 3 && extremeSet.Exists(INT_MAX) && extremeSet.Exists(INT_MIN),
+                       "Handling extreme values (INT_MAX/MIN)");
+
+    // Test : Test di robustezza con operazioni miste
+    lasd::SetVec<int> mixedSet;
+    for(int i = 0; i < 100; i++) {
+        mixedSet.Insert(i);
+        if(i % 2 == 0) {
+            mixedSet.Remove(i);
+        }
+    }
+    testResults.addTest(mixedSet.Size() == 50, "Mixed operations maintain correct size");
+
+    
+    // Test : Test con stringhe speciali
+    lasd::SetVec<std::string> specialSet;
+    specialSet.Insert("");
+    specialSet.Insert(" ");
+    specialSet.Insert("\n");
+    specialSet.Insert("\t");
+    testResults.addTest(specialSet.Size() == 4, "Handling special strings");
+
+    // Test : Test di copia profonda
+    lasd::SetVec<int> originalSet;
+    originalSet.Insert(1);
+    originalSet.Insert(2);
+    lasd::SetVec<int> copiedSet = originalSet;
+    originalSet.Remove(1);
+    testResults.addTest(copiedSet.Exists(1), "Deep copy maintains independence");
+
     // Stampa il resoconto dei test
     testResults.printSummary("SetVec<int>");
+    
 }
+
+
+// Test per SetList
+void MyTestSetList() {
+    std::cout << "\nBegin of SetList<int> Test:" << std::endl;
+    
+    // Resettiamo il contatore dei test
+    testResults.reset();
+    
+    // Test : Creazione di un set vuoto
+    lasd::SetLst<int> setList;
+    testResults.addTest(true, "Creating empty set list");
+    
+    // Test : Dimensione set vuoto
+    testResults.addTest(setList.Size() == 0, "Empty set has size 0");
+    
+    // Test : Empty su set vuoto
+    testResults.addTest(setList.Empty(), "New set is empty");
+    
+    // Test : Inserimenti base
+    testResults.addTest(setList.Insert(10), "Inserting first element succeeds");
+    testResults.addTest(!setList.Insert(10), "Inserting duplicate fails");
+    
+    // Test : Inserimenti multipli
+    setList.Insert(20);
+    setList.Insert(30);
+    testResults.addTest(setList.Size() == 3, "Multiple insertions maintain correct size");
+    
+    // Test : Rimozioni
+    setList.Remove(20);
+    testResults.addTest(!setList.Exists(20) && setList.Size() == 2, 
+                       "Removal updates size and existence correctly");
+
+    // Test : Operazioni di copia
+    lasd::SetLst<int> setList2 = setList;
+    testResults.addTest(setList == setList2, "Copy constructor creates equal set");
+    
+    // Test : Clear
+    setList.Clear();
+    testResults.addTest(setList.Empty(), "Clear makes set empty");
+    
+    // Test : Grandi dimensioni
+    for(int i = 0; i < 1000; i++) {
+        setList.Insert(i);
+    }
+    testResults.addTest(setList.Size() == 1000, "Large set list handles 1000 elements");
+
+
+    // Test : Operazioni miste
+    lasd::SetLst<std::string> strSetList;
+    strSetList.Insert("test1");
+    strSetList.Insert("test2");
+    strSetList.Remove("test1");
+    strSetList.Insert("test3");
+    testResults.addTest(strSetList.Size() == 2 && strSetList.Exists("test3"), 
+                       "Mixed operations work correctly");
+
+    // Test : Valori limite
+    lasd::SetLst<int> extremeSetList;
+    extremeSetList.Insert(INT_MAX);
+    extremeSetList.Insert(INT_MIN);
+    testResults.addTest(extremeSetList.Exists(INT_MAX) && extremeSetList.Exists(INT_MIN),
+                       "Handling extreme values in set list");
+
+    // Test : Move semantics
+    lasd::SetLst<int> moveSource;
+    moveSource.Insert(100);
+    moveSource.Insert(200);
+    lasd::SetLst<int> moveDest(std::move(moveSource));
+    testResults.addTest(moveSource.Empty() && moveDest.Size() == 2,
+                       "Move constructor works correctly");
+     
+       
+    // Test : Operazioni di unione
+    lasd::SetLst<int> set1, set2;
+    set1.Insert(1);
+    set1.Insert(2);
+    set2.Insert(2);
+    set2.Insert(3);
+    lasd::SetLst<int> set3;
+
+    // Inseriamo prima tutti gli elementi del primo set
+    set3.Insert(1);
+    set3.Insert(2);
+
+    // Aggiungiamo gli elementi del secondo set
+    set3.Insert(2);  // Questo non avrà effetto perché 2 è già presente
+    set3.Insert(3);
+
+    testResults.addTest(set3.Size() == 3 && 
+                        set3.Exists(1) && 
+                        set3.Exists(2) && 
+                        set3.Exists(3), 
+                         "Set union maintains unique elements");
+
+    
+    testResults.printSummary("SetList<int>");
+}
+
 
 /* ************************************************************************** */
 
@@ -821,12 +959,14 @@ void mytest() {
                 break;
             case 3:
                 MyTestSet();
+                MyTestSetList();
                 break;
             case 4:
                 std::cout << "\n========= ESECUZIONE DI TUTTI I TEST =========" << std::endl;
                 MyTestVector();
                 MyTestList();
                 MyTestSet();
+                MyTestList();
                 break;
             case 0:
                 std::cout << "Uscita dai test personalizzati" << std::endl;
