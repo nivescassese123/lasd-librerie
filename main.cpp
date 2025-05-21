@@ -8,10 +8,11 @@
 
 #include <iostream>
 
+
 /* ************************************************************************** */
 
 int main() {
-  std::cout << "Lasd Libraries 2023" << std::endl;
+  std::cout << "Lasd Libraries 2025" << std::endl;
   
   int scelta;
   
@@ -25,10 +26,10 @@ int main() {
     
     switch(scelta) {
       case 1:
-        lasdtest();  // Funzione definita in zlasdtest/test.hpp
+        lasdtest();  // Test professore
         break;
       case 2:
-        mytest();  // Funzione definita in zmytest/test.hpp
+        mytest();  // Test personalizzati
         break;
       case 0:
         std::cout << "Arrivederci!" << std::endl;
