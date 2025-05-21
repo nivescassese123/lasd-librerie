@@ -321,6 +321,108 @@ void MyTestVector() {
         }
     }
     testResults.addTest(charSorted, "Sorting characters correctly");
+
+    // Test : Test con stringhe vuote
+    lasd::SortableVector<std::string> specialStrVec(4);
+    specialStrVec[0] = "";
+    specialStrVec[1] = " ";
+    specialStrVec[2] = "\t";
+    specialStrVec[3] = "\n";
+    
+    specialStrVec.Sort();
+    bool specialStrSorted = true;
+    for(unsigned long i = 1; i < specialStrVec.Size(); i++) {
+        if(specialStrVec[i-1] > specialStrVec[i]) {
+            specialStrSorted = false;
+            break;
+        }
+    }
+    testResults.addTest(specialStrSorted, "Sorting vector with special strings");
+
+    // Test : Stress test con operazioni ripetute
+    lasd::SortableVector<int> stressVec(100);
+    for(unsigned long i = 0; i < stressVec.Size(); i++) {
+    stressVec[i] = 100 - i;
+      }
+
+    for(int i = 0; i < 10; i++) {  
+    stressVec.Sort();
+    // Verifica che sia ordinato dopo il sort
+    bool isSorted = true;
+    for(unsigned long j = 1; j < stressVec.Size(); j++) {
+        if(stressVec[j-1] > stressVec[j]) {
+            isSorted = false;
+            break;
+        }
+     }
+    
+    if(!isSorted) {
+        stringsSorted = false;
+        break;
+    }
+    
+    // Resize e reinserimento
+    stressVec.Resize(50);
+    stressVec.Resize(100);
+    // Riempi la seconda metà con numeri più grandi di quelli presenti
+    for(unsigned long j = 50; j < stressVec.Size(); j++) {
+        stressVec[j] = 200 - j; // Usando 200 invece di 100 per garantire l'ordinamento
+      }
+    }
+
+     // Verifica finale dopo l'ultima iterazione
+     if(stringsSorted) {
+    stressVec.Sort();
+     for(unsigned long i = 1; i < stressVec.Size(); i++) {
+        if(stressVec[i-1] > stressVec[i]) {
+            stringsSorted = false;
+            break;
+        }
+      }
+   }
+
+    testResults.addTest(stringsSorted, "Stress test with repeated operations");
+
+    
+
+    // Test : Test di resize con vari scenari
+    lasd::SortableVector<int> resizeVec(5);
+    for(unsigned long i = 0; i < resizeVec.Size(); i++) {
+        resizeVec[i] = i;
+    }
+    
+    resizeVec.Resize(3);  // Riduzione
+    bool resizeTestSmaller = (resizeVec.Size() == 3 && resizeVec[2] == 2);
+    
+    resizeVec.Resize(7);  // Espansione
+    bool resizeTestLarger = (resizeVec.Size() == 7);
+    
+    resizeVec.Resize(0);  // Azzeramento
+    bool resizeTestZero = (resizeVec.Empty());
+    
+    testResults.addTest(resizeTestSmaller && resizeTestLarger && resizeTestZero, 
+                       "Multiple resize operations work correctly");
+
+    // Test : Test con sequenza di operazioni miste
+    lasd::SortableVector<int> mixedVec(3);
+    mixedVec[0] = 30;
+    mixedVec[1] = 10;
+    mixedVec[2] = 20;
+    
+    mixedVec.Sort();           // Ordina
+    mixedVec.Resize(4);        // Espandi
+    mixedVec[3] = 15;         // Inserisci
+    mixedVec.Sort();           // Riordina
+    
+    bool mixedOpsTest = true;
+    for(unsigned long i = 1; i < mixedVec.Size(); i++) {
+        if(mixedVec[i-1] > mixedVec[i]) {
+            mixedOpsTest = false;
+            break;
+        }
+    }
+    testResults.addTest(mixedOpsTest, "Mixed operations sequence maintains correctness");
+
     
     // Test : Test con booleani
     lasd::SortableVector<bool> boolVec(4);
@@ -519,6 +621,105 @@ void MyTestList() {
     }
     testResults.addTest(removeFromBackExceptionThrown, "RemoveFromBack on empty list throws length_error");
     
+     
+    
+    // Test 16: Test con lista di grandi dimensioni
+    lasd::List<int> bigList;
+    for(int i = 0; i < 10000; i++) {
+        bigList.InsertAtBack(i);
+    }
+    testResults.addTest(bigList.Size() == 10000, "Large list creation and insertion (10000 elements)");
+
+    // Test 17: Test di inserimenti e rimozioni alternati
+    lasd::List<int> alternateList;
+    for(int i = 0; i < 100; i++) {
+        alternateList.InsertAtFront(i);
+        if(!alternateList.Empty()) {
+            alternateList.RemoveFromBack();
+        }
+        alternateList.InsertAtBack(i);
+        if(!alternateList.Empty()) {
+            alternateList.RemoveFromFront();
+        }
+    }
+    alternateList.InsertAtBack(42);
+    testResults.addTest(alternateList.Size() == 1 && alternateList.Front() == 42, 
+                       "Alternate insertions and removals maintain consistency");
+
+    // Test 18: Test con operazioni di copia dopo modifiche multiple
+    lasd::List<int> originalList;
+    for(int i = 0; i < 5; i++) {
+        originalList.InsertAtBack(i);
+        originalList.InsertAtFront(i);
+    }
+    lasd::List<int> copyList = originalList;
+    originalList.Clear();
+    testResults.addTest(!copyList.Empty() && copyList.Size() == 10, 
+                       "Deep copy maintains independence after multiple operations");
+
+    // Test 19: Test con stringhe di diversa lunghezza
+    lasd::List<std::string> stringList;
+    stringList.InsertAtBack("");
+    stringList.InsertAtBack("a");
+    stringList.InsertAtBack("aa");
+    stringList.InsertAtBack("aaa");
+    testResults.addTest(stringList.Size() == 4 && stringList.Back() == "aaa", 
+                       "Handling strings of different lengths");
+
+    // Test 20: Test di robustezza con operazioni miste
+    lasd::List<int> robustList;
+    for(int i = 0; i < 1000; i++) {
+        robustList.InsertAtFront(i * 2);
+        if(i % 2 == 0) {
+            robustList.RemoveFromBack();
+        }
+    }
+    testResults.addTest(robustList.Size() == 500, 
+                       "Consistency after multiple mixed operations");
+
+    // Test 21: Test con valori limite
+    lasd::List<int> extremeList;
+    extremeList.InsertAtFront(INT_MAX);
+    extremeList.InsertAtBack(INT_MIN);
+    testResults.addTest(extremeList.Front() == INT_MAX && extremeList.Back() == INT_MIN, 
+                       "Handling extreme values (INT_MAX/MIN)");
+
+    // Test 22: Test di concatenazione elementi
+    lasd::List<std::string> concatList;
+    concatList.InsertAtBack("Hello");
+    concatList.InsertAtBack(" ");
+    concatList.InsertAtBack("World");
+    std::string result;
+    for(unsigned long i = 0; i < concatList.Size(); i++) {
+        result += concatList[i];
+    }
+    testResults.addTest(result == "Hello World", 
+                       "String concatenation in list");
+
+     // Test 27: Test con stringhe miste (numeri e lettere)
+     lasd::List<std::string> mixedStringList;
+     mixedStringList.InsertAtBack("123abc");
+     mixedStringList.InsertAtBack("ABC123");
+     mixedStringList.InsertAtBack("1a2b3c");
+     testResults.addTest(mixedStringList.Size() == 3 && mixedStringList.Front() == "123abc", 
+                   "Handling mixed alphanumeric strings");
+
+    // Test 28: Test di modifica di stringhe
+    lasd::List<std::string> modifyStringList;
+    modifyStringList.InsertAtBack("test");
+    modifyStringList.Front() += "_modified";
+    testResults.addTest(modifyStringList.Front() == "test_modified", 
+                   "String modification in container");
+
+    // Test 29: Test con stringhe contenenti spazi
+    lasd::List<std::string> spaceStringList;
+    spaceStringList.InsertAtBack("   leading spaces");
+    spaceStringList.InsertAtBack("trailing spaces   ");
+    spaceStringList.InsertAtBack("   both   sides   ");
+    testResults.addTest(spaceStringList.Size() == 3, 
+                   "Handling strings with various space patterns");
+
+
     // Stampa il resoconto dei test
     testResults.printSummary("List<int>");
 }
@@ -531,59 +732,59 @@ void MyTestSet() {
     // Resettiamo il contatore dei test
     testResults.reset();
     
-    // Test 1: Creazione di un set vuoto
+    // Test : Creazione di un set vuoto
     lasd::SetVec<int> setVec;
     testResults.addTest(true, "Creating empty set"); // Il test passa se la creazione non genera eccezioni
     
-    // Test 2: Dimensione set vuoto
+    // Test : Dimensione set vuoto
     testResults.addTest(setVec.Size() == 0, "The container has size 0");
     
-    // Test 3: Empty su set vuoto
+    // Test : Empty su set vuoto
     testResults.addTest(setVec.Empty(), "The container is empty");
     
-    // Test 4: Inserimento elementi
+    // Test : Inserimento elementi
     testResults.addTest(setVec.Insert(10), "Inserting element 10 succeeds");
     
-    // Test 5: Inserimento elemento duplicato (non dovrebbe essere permesso)
+    // Test : Inserimento elemento duplicato (non dovrebbe essere permesso)
     testResults.addTest(!setVec.Insert(10), "Inserting duplicate element 10 fails");
     
-    // Test 6: Verifica dimensione dopo inserimento
+    // Test : Verifica dimensione dopo inserimento
     testResults.addTest(setVec.Size() == 1, "The container has size 1 after insertion");
     
-    // Test 7: Inserimento multiplo
+    // Test : Inserimento multiplo
     setVec.Insert(20);
     setVec.Insert(30);
     setVec.Insert(40);
     testResults.addTest(setVec.Size() == 4, "The container has size 4 after multiple insertions");
     
-    // Test 8: Verifica esistenza elemento
+    // Test : Verifica esistenza elemento
     testResults.addTest(setVec.Exists(20), "Data \"20\" does exist");
     
-    // Test 9: Verifica assenza elemento
+    // Test : Verifica assenza elemento
     testResults.addTest(!setVec.Exists(25), "Data \"25\" does not exist");
     
-    // Test 10: Rimozione elemento
+    // Test : Rimozione elemento
     setVec.Remove(20);
     testResults.addTest(!setVec.Exists(20), "Data \"20\" does not exist after removal");
     
-    // Test 11: Dimensione dopo rimozione
+    // Test : Dimensione dopo rimozione
     testResults.addTest(setVec.Size() == 3, "The container has size 3 after removal");
     
-    // Test 12: Operatore =
+    // Test : Operatore =
     lasd::SetVec<int> setVec2 = setVec;
     testResults.addTest(setVec == setVec2, "Copy assignment operator creates equal set");
     
-    // Test 13: Clear
+    // Test : Clear
     setVec2.Clear();
     testResults.addTest(setVec2.Empty(), "The container is empty after Clear");
     
-    // Test 14: SetVec con tipo diverso
+    // Test : SetVec con tipo diverso
     lasd::SetVec<std::string> setVecStr;
     setVecStr.Insert("primo");
     setVecStr.Insert("secondo");
     testResults.addTest(setVecStr.Size() == 2, "String set has size 2 after insertions");
     
-    // Test 15: Rimozione elemento non esistente
+    // Test : Rimozione elemento non esistente
     bool beforeRemove = setVec.Exists(50);
     setVec.Remove(50);
     bool afterRemove = setVec.Exists(50);
@@ -599,7 +800,7 @@ void MyTestSet() {
 void mytest() {
     int scelta;
     
-    std::cout << "Benvenuto nei test personalizzati per la libreria LASD!" << std::endl;
+    std::cout << "~*~#~*~ Benvenuti in: LASD Test Suite Custom~*~#~*~!" << std::endl;
     
     do {
         std::cout << "\nScegli il test da eseguire:" << std::endl;
